@@ -1,0 +1,501 @@
+openapi: 3.0.4
+info:
+  title: API кинотеатра Искорка
+  description: |
+    ## API кинотеатра "Искорка"
+    
+    для партнёров
+  
+  contact:
+    email: myrabota@mail.ru
+  version: 1.0.12
+servers:
+  - url: /
+paths: 
+  /sessions/{id}/seats:
+    get:
+      summary: Наличие мест на сеанс
+      description: Метод возвращает информацию о количестве мест на указанный сеанс. Только для авторизованных пользователей.
+      tags:
+        - Методы для пользователей
+      parameters: 
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            description: Идентификатор сеанса
+            example: 357
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 20
+            description: Количество мест, выдаваемых на одну страницу
+            example: 20
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+            description: Количество мест, которое нужно пропустить перед выдачей
+            example: 0
+      responses:
+        '200':
+          $ref: '#/components/responses/SessionSeatsOK'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /bookings:
+    post:
+      summary: Забронировать место
+      description: Метод создаёт новую бронь на выбранные места в указанном сеансе. Только для авторизованных пользователей.
+      tags:
+        - Методы для пользователей
+      requestBody: 
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                session:
+                  type: object
+                  properties:
+                    id:
+                      $ref: '#/components/schemas/Sessions_Id' 
+                seats: 
+                  $ref: '#/components/schemas/Seats'
+      responses:
+        '200':
+          $ref: '#/components/responses/BookingCreated'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /bookings/{id}:
+    patch:
+      summary: Отменить бронь полностью
+      description: Метод полностью отменяет бронь. Только для авторизованных пользователей.
+      tags:
+        - Методы для пользователей 
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Booking_Id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: 
+                    - canceled
+                  example: Полная отмена брони
+      responses:
+        '200':
+          $ref: '#/components/responses/BookingCancelled'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /sessions/{id}:
+    patch:
+      summary: Изменить время сеанса
+      description: Метод изменяет время сеанса
+      tags:
+        - Методы для администраторов
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Sessions_Id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                start_datetime:
+                  $ref: '#/components/schemas/Starte_DateTime'
+      responses:
+        '200':
+          $ref: '#/components/responses/SessionUpdated'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    Sessions_Id:
+      type: integer
+      description: Идентификатор сеанса
+      example: 456
+    Booking_Id:
+      type: integer
+      description: Идентификатор брони
+      example: 555
+    Tickets_Id:
+      type: integer
+      description: Идентификатор билета
+      example: 753
+    Hall:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Идентификатор зала
+          example: 123
+        name:
+          type: string
+          description: Название зала
+          example: Зелёный зал
+    Film:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Идентификатор фильма
+          example: 151
+        name:
+          type: string
+          description: Название фильма
+          example: "Аватар"
+    SeatsWithStatus:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            description: Идентификатор места
+            example: 147
+          row_number:
+            type: integer
+            description: Номер ряда
+            example: 7
+          seat_number:
+            type: integer
+            description: Номер места
+            example: 17
+          status:
+            type: string
+            enum:
+              - free
+              - booked
+            description: Статус места
+            example: "free"
+    Seats:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            description: Идентификатор места
+            example: 147
+          row_number:
+            type: integer
+            description: Номер ряда
+            example: 7
+          seat_number:
+            type: integer
+            description: Номер места
+            example: 17
+    Session:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Sessions_Id'
+        hall:
+          $ref: '#/components/schemas/Hall'
+        film:
+          $ref: '#/components/schemas/Film'
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Идентификатор пользователя
+          example: 713
+        username:
+          type: string
+          description: Логин/Имя пользователя
+          example: Иван
+    Status_Booking:
+      type: string
+      enum:
+        - active
+        - cancelled
+        - expired
+      description: Статус брони - активна, отменена, истекла
+    Starte_DateTime:
+      type: string
+      format: date-time
+      description: Дата и время начала сеанса
+      example: "2024-12-25T19:30:00+03:00"
+    Date_Created:  
+      type: string
+      format: date-time
+      description: Дата создания заказа
+      example: "2024-12-25T20:00:00+03:00"
+    Date_modified:
+      type: string
+      format: date-time
+      description: Дата изменения заказа
+      example: "2024-12-25T20:00:00+03:00"
+    Pagination:
+      type: object
+      properties:
+        limit:
+          type: integer
+          description: Количество мест, выдаваемых на одну страницу 
+          example: 20
+        offset:
+          type: integer
+          description: Количество мест, которое нужно пропустить перед выдачей
+          example: 0
+        totalCount:
+          type: integer
+          description: Количество мест всего
+          example: 300
+    ResponsesSessionSeats:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Sessions_Id'  
+        hall:
+          $ref: '#/components/schemas/Hall'
+        film:
+          $ref: '#/components/schemas/Film'
+        start_datetime:
+          $ref: '#/components/schemas/Starte_DateTime' 
+        seats:
+          $ref: '#/components/schemas/SeatsWithStatus'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    ResponsesBooking:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Booking_Id'
+        user:
+          $ref: '#/components/schemas/User'
+        tickets:
+          type: array
+          items:
+            type: object
+            properties: 
+              id:
+                $ref: '#/components/schemas/Tickets_Id'
+              session:
+                $ref: '#/components/schemas/Session'
+              seats:
+                $ref: '#/components/schemas/Seats'
+              price:
+                type: string
+                description: Цена билета
+                example: "250.00"
+        sum:
+          type: string
+          description: Сумма всей брони (за все билеты)
+          example: "750.00"
+        status:
+          $ref: '#/components/schemas/Status_Booking'
+        date_created:
+          $ref: '#/components/schemas/Date_Created'
+    ResponsesBookingId:    
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Booking_Id'
+        tickets:
+          type: array
+          items:
+            type: object
+            properties: 
+              id:
+                $ref: '#/components/schemas/Tickets_Id'
+              session:
+                $ref: '#/components/schemas/Session'
+              seats:
+                $ref: '#/components/schemas/Seats'
+              price:
+                type: string
+                description: Цена билета
+                example: "250.00"
+              status:
+                type: string
+                enum:
+                  - active
+                  - cancelled
+                  - expired
+                description: Статус брони - активна, отменена, истекла
+        sum:
+          type: string
+          description: Сумма всей брони (за все билеты)
+          example: "750.00"
+        status:
+          type: string
+          enum:
+            - active
+            - cancelled
+            - expired
+          description: Статус брони - активна, отменена, истекла
+        date_created:
+          $ref: '#/components/schemas/Date_Created'
+        date_modified:
+          $ref: '#/components/schemas/Date_modified'
+    ResponsesSessionsId:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Sessions_Id'
+        user:
+          $ref: '#/components/schemas/User'
+        start_datetime:
+          $ref: '#/components/schemas/Starte_DateTime'
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: HTTP код ошибки
+        message:
+          type: string
+          description: Описание ошибки
+  responses:
+    SessionSeatsOK:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponsesSessionSeats'
+        application/xml:
+          schema:
+            xml:
+              name: xml_seats
+            allOf:
+              - $ref: '#/components/schemas/ResponsesSessionSeats'
+    BookingCreated:
+      description: OK. Бронь создана
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponsesBooking'
+        application/xml:
+          schema:
+            xml:
+              name: xml_booking
+            allOf:
+              - $ref: '#/components/schemas/ResponsesBooking'
+    BookingCancelled:
+      description: OK. Бронь отменена
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponsesBookingId'
+        application/xml:
+          schema:
+            xml:
+              name: xml_bookingId
+            allOf:
+              - $ref: '#/components/schemas/ResponsesBookingId'
+    SessionUpdated:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponsesSessionsId'
+        application/xml:
+          schema:
+            xml:
+              name: xml_sessionsId
+            allOf:
+              - $ref: '#/components/schemas/ResponsesSessionsId'
+    BadRequest:
+      description: Неверный запрос
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+        application/xml:
+          schema:
+            xml:
+              name: xml_error
+            allOf:
+              - $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Не авторизован
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+        application/xml:
+          schema:
+            xml:
+              name: xml_error
+            allOf:
+              - $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Ресурс не найден
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+        application/xml:
+          schema:
+            xml:
+              name: xml_error
+            allOf:
+              - $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+        application/xml:
+          schema:
+            xml:
+              name: xml_error
+            allOf:
+              - $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Доступ запрещён (требуются права администратора)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+        application/xml:
+          schema:
+            xml:
+              name: xml_error
+            allOf:
+              - $ref: '#/components/schemas/Error'
