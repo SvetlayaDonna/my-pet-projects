@@ -44,8 +44,6 @@
 - Оплата через NFC-терминал
 - Автоматическая безопасность сессий (авто-logout из IG через 5 мин)
 
-**Технологии:** Linux/Windows IoT, Instagram API, ESC/POS, OPOS/JavaPOS
-
 📄 [Анализ требований и сценарии](docs/01-requirements/analysis-photokiosk.md)
 
 ---
