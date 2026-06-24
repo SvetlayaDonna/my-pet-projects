@@ -58,9 +58,9 @@ paths:
     post:
       summary: Забронировать место
       description: Метод создаёт новую бронь на выбранные места в указанном сеансе. Только для авторизованных пользователей.
-      tags:
+      tags: 
         - Методы для пользователей
-      requestBody: 
+      requestBody:
         content:
           application/json:
             schema:
@@ -70,8 +70,8 @@ paths:
                   type: object
                   properties:
                     id:
-                      $ref: '#/components/schemas/Sessions_Id' 
-                seats: 
+                      $ref: '#/components/schemas/Sessions_Id'
+                seats:
                   $ref: '#/components/schemas/Seats'
       responses:
         '200':
@@ -89,7 +89,7 @@ paths:
       summary: Отменить бронь полностью
       description: Метод полностью отменяет бронь. Только для авторизованных пользователей.
       tags:
-        - Методы для пользователей 
+        - Методы для пользователей
       parameters:
         - name: id
           in: path
@@ -104,7 +104,7 @@ paths:
               properties:
                 status:
                   type: string
-                  enum: 
+                  enum:
                     - canceled
                   example: Полная отмена брони
       responses:
@@ -260,7 +260,7 @@ components:
       format: date-time
       description: Дата и время начала сеанса
       example: "2024-12-25T19:30:00+03:00"
-    Date_Created:  
+    Date_Created: 
       type: string
       format: date-time
       description: Дата создания заказа
@@ -275,7 +275,7 @@ components:
       properties:
         limit:
           type: integer
-          description: Количество мест, выдаваемых на одну страницу 
+          description: Количество мест, выдаваемых на одну страницу
           example: 20
         offset:
           type: integer
@@ -289,13 +289,13 @@ components:
       type: object
       properties:
         id:
-          $ref: '#/components/schemas/Sessions_Id'  
+          $ref: '#/components/schemas/Sessions_Id' 
         hall:
           $ref: '#/components/schemas/Hall'
         film:
           $ref: '#/components/schemas/Film'
         start_datetime:
-          $ref: '#/components/schemas/Starte_DateTime' 
+          $ref: '#/components/schemas/Starte_DateTime'
         seats:
           $ref: '#/components/schemas/SeatsWithStatus'
         pagination:
@@ -311,7 +311,7 @@ components:
           type: array
           items:
             type: object
-            properties: 
+            properties:
               id:
                 $ref: '#/components/schemas/Tickets_Id'
               session:
@@ -330,7 +330,7 @@ components:
           $ref: '#/components/schemas/Status_Booking'
         date_created:
           $ref: '#/components/schemas/Date_Created'
-    ResponsesBookingId:    
+    ResponsesBookingId: 
       type: object
       properties:
         id:
@@ -339,163 +339,3 @@ components:
           type: array
           items:
             type: object
-            properties: 
-              id:
-                $ref: '#/components/schemas/Tickets_Id'
-              session:
-                $ref: '#/components/schemas/Session'
-              seats:
-                $ref: '#/components/schemas/Seats'
-              price:
-                type: string
-                description: Цена билета
-                example: "250.00"
-              status:
-                type: string
-                enum:
-                  - active
-                  - cancelled
-                  - expired
-                description: Статус брони - активна, отменена, истекла
-        sum:
-          type: string
-          description: Сумма всей брони (за все билеты)
-          example: "750.00"
-        status:
-          type: string
-          enum:
-            - active
-            - cancelled
-            - expired
-          description: Статус брони - активна, отменена, истекла
-        date_created:
-          $ref: '#/components/schemas/Date_Created'
-        date_modified:
-          $ref: '#/components/schemas/Date_modified'
-    ResponsesSessionsId:
-      type: object
-      properties:
-        id:
-          $ref: '#/components/schemas/Sessions_Id'
-        user:
-          $ref: '#/components/schemas/User'
-        start_datetime:
-          $ref: '#/components/schemas/Starte_DateTime'
-    Error:
-      type: object
-      properties:
-        code:
-          type: integer
-          description: HTTP код ошибки
-        message:
-          type: string
-          description: Описание ошибки
-  responses:
-    SessionSeatsOK:
-      description: OK
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ResponsesSessionSeats'
-        application/xml:
-          schema:
-            xml:
-              name: xml_seats
-            allOf:
-              - $ref: '#/components/schemas/ResponsesSessionSeats'
-    BookingCreated:
-      description: OK. Бронь создана
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ResponsesBooking'
-        application/xml:
-          schema:
-            xml:
-              name: xml_booking
-            allOf:
-              - $ref: '#/components/schemas/ResponsesBooking'
-    BookingCancelled:
-      description: OK. Бронь отменена
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ResponsesBookingId'
-        application/xml:
-          schema:
-            xml:
-              name: xml_bookingId
-            allOf:
-              - $ref: '#/components/schemas/ResponsesBookingId'
-    SessionUpdated:
-      description: OK
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ResponsesSessionsId'
-        application/xml:
-          schema:
-            xml:
-              name: xml_sessionsId
-            allOf:
-              - $ref: '#/components/schemas/ResponsesSessionsId'
-    BadRequest:
-      description: Неверный запрос
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-        application/xml:
-          schema:
-            xml:
-              name: xml_error
-            allOf:
-              - $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Не авторизован
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-        application/xml:
-          schema:
-            xml:
-              name: xml_error
-            allOf:
-              - $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Ресурс не найден
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-        application/xml:
-          schema:
-            xml:
-              name: xml_error
-            allOf:
-              - $ref: '#/components/schemas/Error'
-    InternalServerError:
-      description: Внутренняя ошибка сервера
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-        application/xml:
-          schema:
-            xml:
-              name: xml_error
-            allOf:
-              - $ref: '#/components/schemas/Error'
-    Forbidden:
-      description: Доступ запрещён (требуются права администратора)
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-        application/xml:
-          schema:
-            xml:
-              name: xml_error
-            allOf:
-              - $ref: '#/components/schemas/Error'
