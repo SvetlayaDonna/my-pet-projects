@@ -221,11 +221,37 @@
                 <a href="docs/02-design/use-case-clothing.html" class="project-link">📄 Описание Use Case →</a>
             </div>
 
-            <div class="project">
-                <h3>🛒 Sequence Diagram: Заказ в интернет-магазине</h3>
-                <p>Моделирование процесса взаимодействия компонентов системы при поиске и заказе товара. 
-                Описаны процессы авторизации, поиска и заказа с параллельными сценариями.</p>
-            </div>
+<div class="project">
+    <h3>🛒 Sequence Diagram: Поиск и заказ товара в интернет-магазине</h3>
+    <p>Моделирование процесса взаимодействия компонентов системы при поиске и заказе товара.</p>
+    
+    <h4>Что сделано:</h4>
+    <ul>
+        <li>✅ Построена <strong>диаграмма последовательности</strong> (Sequence Diagram)</li>
+        <li>✅ Описаны <strong>3 основных процесса</strong>: Авторизация, Поиск товара, Заказ товара</li>
+        <li>✅ Показано <strong>взаимодействие компонентов</strong>: User Interface, Authorization Server, Server, DataBase, Система логирования</li>
+        <li>✅ Учтены <strong>альтернативные сценарии</strong> (успешная/неуспешная авторизация)</li>
+        <li>✅ Описаны <strong>параллельные процессы</strong> (par) и <strong>циклы</strong> (loop)</li>
+    </ul>
+    
+    <h4>Основные процессы:</h4>
+    <ol>
+        <li><strong>Авторизация</strong>: ввод логина/пароля, проверка учётных данных, логирование</li>
+        <li><strong>Поиск товара</strong>: GET-запрос, select-запрос в БД, возврат JSON</li>
+        <li><strong>Заказ товара</strong>: POST-запрос, insert в БД, обновление статуса (каждые 5 минут)</li>
+    </ol>
+    
+    <h4>Компоненты системы:</h4>
+    <ul>
+        <li>Internet (User Interface)</li>
+        <li>Authorization Server (Authorization-API)</li>
+        <li>Server (Catalog-API, Order-API)</li>
+        <li DataBase (Catalog DB, Order DB)</li>
+        <li>Система логирования</li>
+    </ul>
+    
+    <a href="docs/02-design/sequence-shop.png" target="_blank" class="project-link">📄 Смотреть Sequence Diagram →</a>
+</div>
         </div>
     </div>
 </body>
