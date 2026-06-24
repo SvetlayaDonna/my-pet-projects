@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SRS: Запись на приём | Светлана Стащук</title>
+    <title>SRS: Запись на приём | Спецификация требований</title>
     <style>
         * {
             margin: 0;
@@ -11,68 +11,135 @@
             box-sizing: border-box;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f5f7fa;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f0f2f5;
             color: #333;
-            line-height: 1.6;
-            padding: 40px 20px;
+            line-height: 1.7;
+            padding: 20px;
         }
         .container {
-            max-width: 900px;
+            max-width: 1100px;
             margin: 0 auto;
             background: white;
             padding: 60px;
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 30px;
+            border-bottom: 3px solid #667eea;
+            margin-bottom: 40px;
         }
         h1 {
             color: #667eea;
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            border-bottom: 3px solid #667eea;
-            padding-bottom: 15px;
+            font-size: 2.8em;
+            margin-bottom: 15px;
+        }
+        .subtitle {
+            font-size: 1.3em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .meta-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 30px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .meta-item {
+            text-align: center;
+        }
+        .meta-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+        .meta-value {
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        .toc {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 40px 0;
+            border-left: 5px solid #667eea;
+        }
+        .toc h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .toc li {
+            margin: 12px 0;
+        }
+        .toc a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: color 0.3s;
+        }
+        .toc a:hover {
+            color: #764ba2;
+            text-decoration: underline;
         }
         h2 {
-            color: #764ba2;
-            font-size: 1.8em;
-            margin: 40px 0 20px;
+            color: #667eea;
+            font-size: 2.2em;
+            margin: 50px 0 25px;
             padding-top: 20px;
             border-top: 2px solid #eee;
         }
         h3 {
-            color: #333;
-            font-size: 1.4em;
+            color: #764ba2;
+            font-size: 1.6em;
+            margin: 35px 0 20px;
+        }
+        h4 {
+            color: #555;
+            font-size: 1.3em;
             margin: 25px 0 15px;
         }
-        .meta {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            border-left: 4px solid #667eea;
+        p {
+            margin: 15px 0;
+            font-size: 1.05em;
         }
-        .meta p {
-            margin: 5px 0;
-            color: #555;
+        ul, ol {
+            margin: 15px 0 15px 30px;
         }
-        .meta strong {
-            color: #667eea;
+        li {
+            margin: 10px 0;
+            font-size: 1.05em;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
+            margin: 25px 0;
             background: white;
-        }
-        th, td {
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            text-align: left;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
         }
         th {
-            background: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
+            padding: 15px;
+            text-align: left;
             font-weight: 600;
+            font-size: 1.05em;
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
         }
         tr:nth-child(even) {
             background: #f8f9fa;
@@ -80,372 +147,566 @@
         tr:hover {
             background: #e9ecef;
         }
-        ul, ol {
-            margin: 15px 0;
-            padding-left: 30px;
-        }
-        li {
-            margin: 8px 0;
-        }
-        .back-link {
-            display: inline-block;
-            margin-top: 40px;
-            padding: 12px 25px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: transform 0.3s;
-        }
-        .back-link:hover {
-            transform: translateY(-2px);
-        }
-        @media (max-width: 768px) {
-            .container {
-                padding: 30px 20px;
-            }
-            h1 {
-                font-size: 1.8em;
-            }
-            table {
-                font-size: 0.9em;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>📋 SRS: Мобильное приложение «Запись на приём»</h1>
-        
-        <div class="meta">
-            <p><strong>Стандарт:</strong> ISO/IEC/IEEE 29148:2011</p>
-            <p><strong>Версия:</strong> 1.0</p>
-            <p><strong>Дата:</strong> 23.05.2026</p>
-            <p><strong>Статус:</strong> Черновик</p>
-            <p><strong>Идентификатор:</strong> MAA-SRS-01</p>
-        </div>
-
-        <h2>1. Введение</h2>
-        
-        <h3>1.1 Назначение документа</h3>
-        <p>Настоящий документ «Спецификация программных требований» (SRS) полностью описывает функциональные и нефункциональные требования к мобильному приложению «Запись на приём» для медицинских клиник.</p>
-
-        <h3>1.2 Границы и область применения</h3>
-        <p><strong>В данный SRS входят:</strong></p>
-        <ul>
-            <li>Требования к мобильному приложению «Запись на приём» для Android</li>
-        </ul>
-        
-        <p><strong>Вне границ данного SRS остаются:</strong></p>
-        <ul>
-            <li>Реализация и архитектура серверной части (бэкенд)</li>
-            <li>API для интеграции с МИС и внешними сервисами</li>
-        </ul>
-
-        <h2>2. Функциональные требования</h2>
-
-        <h3>2.1 Навигация и информация о клинике</h3>
-        <ul>
-            <li><strong>ФТ001:</strong> Определение геолокации пользователя</li>
-            <li><strong>ФТ002:</strong> Отображение маршрута до клиники (интеграция с Яндекс.Картами)</li>
-        </ul>
-
-        <h3>2.2 Управление профилем</h3>
-        <ul>
-            <li><strong>ФТ003:</strong> Заполнение профиля (ФИО, полис, дата рождения)</li>
-            <li><strong>ФТ004:</strong> Добавление профилей членов семьи</li>
-        </ul>
-
-        <h3>2.3 Поиск и выбор врача</h3>
-        <ul>
-            <li><strong>ФТ007:</strong> Фильтрация по специальности/стажу/отзывам</li>
-            <li><strong>ФТ008:</strong> Карточка врача с отзывами (интеграция с ПроДокторов)</li>
-            <li><strong>ФТ009:</strong> Добавление в «Избранное»</li>
-        </ul>
-
-        <h3>2.4 Запись к врачу</h3>
-        <ul>
-            <li><strong>ФТ011:</strong> Календарь с доступными слотами</li>
-            <li><strong>ФТ013:</strong> Выбор формата приёма (онлайн/офлайн)</li>
-            <li><strong>ФТ015:</strong> Поле «Комментарий для клиники»</li>
-            <li><strong>ФТ018:</strong> Push/SMS/e-mail напоминания</li>
-        </ul>
-
-        <h2>3. Нефункциональные требования</h2>
-
-        <h3>3.1 Производительность</h3>
-        <ul>
-            <li><strong>НФТ001:</strong> Отображение экранов ≤ 5 секунд</li>
-            <li><strong>НФТ002:</strong> Построение маршрута ≤ 2 секунды</li>
-            <li><strong>НФТ003:</strong> Потребление памяти ≤ 150 МБ</li>
-        </ul>
-
-        <h3>3.2 Надёжность</h3>
-        <ul>
-            <li><strong>НФТ005:</strong> Uptime ≥ 99.9%</li>
-            <li><strong>НФТ004:</strong> Работа при обрыве соединения (кэширование)</li>
-        </ul>
-
-        <h2>4. Внешние интерфейсы</h2>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Интерфейс</th>
-                    <th>Назначение</th>
-                    <th>Формат</th>
-                    <th>Протокол</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>API Нетрика (N3)</td>
-                    <td>Запись на приём, расписание</td>
-                    <td>JSON</td>
-                    <td>HTTPS</td>
-                </tr>
-                <tr>
-                    <td>API ПроДокторов</td>
-                    <td>Рейтинги и отзывы</td>
-                    <td>JSON</td>
-                    <td>HTTPS</td>
-                </tr>
-                <tr>
-                    <td>Yandex MapKit SDK</td>
-                    <td>Карты, маршруты</td>
-                    <td>-</td>
-                    <td>HTTPS</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <a href="https://svetlayadonna.github.io/my-pet-projects/" class="back-link">← Вернуться к портфолио</a>
-    </div>
-</body>
-</html><!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SRS: Запись на приём | Светлана Стащук</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f5f7fa;
-            color: #333;
-            line-height: 1.6;
-            padding: 40px 20px;
-        }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            padding: 60px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #667eea;
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            border-bottom: 3px solid #667eea;
-            padding-bottom: 15px;
-        }
-        h2 {
-            color: #764ba2;
-            font-size: 1.8em;
-            margin: 40px 0 20px;
-            padding-top: 20px;
-            border-top: 2px solid #eee;
-        }
-        h3 {
-            color: #333;
-            font-size: 1.4em;
-            margin: 25px 0 15px;
-        }
-        .meta {
+        .requirement {
             background: #f8f9fa;
             padding: 20px;
             border-radius: 8px;
-            margin-bottom: 30px;
+            margin: 20px 0;
             border-left: 4px solid #667eea;
         }
-        .meta p {
-            margin: 5px 0;
-            color: #555;
-        }
-        .meta strong {
+        .requirement-id {
+            font-weight: 700;
             color: #667eea;
+            font-size: 1.1em;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background: white;
+        .section-divider {
+            height: 3px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 50px 0;
+            border: none;
         }
-        th, td {
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-        th {
-            background: #667eea;
-            color: white;
-            font-weight: 600;
-        }
-        tr:nth-child(even) {
-            background: #f8f9fa;
-        }
-        tr:hover {
-            background: #e9ecef;
-        }
-        ul, ol {
-            margin: 15px 0;
-            padding-left: 30px;
-        }
-        li {
-            margin: 8px 0;
-        }
-        .back-link {
+        .back-button {
             display: inline-block;
             margin-top: 40px;
-            padding: 12px 25px;
+            padding: 15px 30px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             text-decoration: none;
             border-radius: 8px;
             font-weight: 600;
-            transition: transform 0.3s;
+            font-size: 1.1em;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
-        .back-link:hover {
+        .back-button:hover {
             transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+        .highlight-box {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+        }
+        .info-box {
+            background: #d1ecf1;
+            border: 1px solid #17a2b8;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+        }
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                padding: 20px;
+            }
+            .back-button {
+                display: none;
+            }
         }
         @media (max-width: 768px) {
             .container {
                 padding: 30px 20px;
             }
             h1 {
-                font-size: 1.8em;
+                font-size: 2em;
+            }
+            h2 {
+                font-size: 1.6em;
             }
             table {
                 font-size: 0.9em;
+            }
+            th, td {
+                padding: 10px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>📋 SRS: Мобильное приложение «Запись на приём»</h1>
-        
-        <div class="meta">
-            <p><strong>Стандарт:</strong> ISO/IEC/IEEE 29148:2011</p>
-            <p><strong>Версия:</strong> 1.0</p>
-            <p><strong>Дата:</strong> 23.05.2026</p>
-            <p><strong>Статус:</strong> Черновик</p>
-            <p><strong>Идентификатор:</strong> MAA-SRS-01</p>
+        <div class="header">
+            <h1>📋 SRS: Мобильное приложение «Запись на приём»</h1>
+            <div class="subtitle">Спецификация программных требований</div>
         </div>
 
-        <h2>1. Введение</h2>
-        
-        <h3>1.1 Назначение документа</h3>
-        <p>Настоящий документ «Спецификация программных требований» (SRS) полностью описывает функциональные и нефункциональные требования к мобильному приложению «Запись на приём» для медицинских клиник.</p>
+        <div class="meta-info">
+            <div class="meta-item">
+                <div class="meta-label">Стандарт</div>
+                <div class="meta-value">ISO/IEC/IEEE 29148:2011</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Версия</div>
+                <div class="meta-value">1.0</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Дата</div>
+                <div class="meta-value">23.05.2026</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Статус</div>
+                <div class="meta-value">Черновик</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Идентификатор</div>
+                <div class="meta-value">MAA-SRS-01</div>
+            </div>
+        </div>
 
-        <h3>1.2 Границы и область применения</h3>
-        <p><strong>В данный SRS входят:</strong></p>
-        <ul>
-            <li>Требования к мобильному приложению «Запись на приём» для Android</li>
-        </ul>
-        
-        <p><strong>Вне границ данного SRS остаются:</strong></p>
-        <ul>
-            <li>Реализация и архитектура серверной части (бэкенд)</li>
-            <li>API для интеграции с МИС и внешними сервисами</li>
-        </ul>
+        <div class="toc">
+            <h2>📑 Оглавление</h2>
+            <ul>
+                <li><a href="#intro">1. Введение</a></li>
+                <li><a href="#general">2. Общее описание</a></li>
+                <li><a href="#functional">3. Функциональные требования</a></li>
+                <li><a href="#nonfunctional">4. Нефункциональные требования</a></li>
+                <li><a href="#interfaces">5. Требования к внешним интерфейсам</a></li>
+                <li><a href="#other">6. Прочие требования</a></li>
+                <li><a href="#verification">7. Верификация и валидация</a></li>
+            </ul>
+        </div>
 
-        <h2>2. Функциональные требования</h2>
+        <section id="intro">
+            <h2>1. Введение</h2>
+            
+            <h3>1.1. Назначение документа</h3>
+            <p>Настоящий документ «Спецификация программных требований» (SRS) полностью описывает функциональные и нефункциональные требования к мобильному приложению «Запись на приём» для медицинских клиник, а также проектные ограничения и другие факторы, влияющие на разработку.</p>
 
-        <h3>2.1 Навигация и информация о клинике</h3>
-        <ul>
-            <li><strong>ФТ001:</strong> Определение геолокации пользователя</li>
-            <li><strong>ФТ002:</strong> Отображение маршрута до клиники (интеграция с Яндекс.Картами)</li>
-        </ul>
+            <h3>1.2. Границы и область применения</h3>
+            <div class="info-box">
+                <strong>В данный SRS входят:</strong>
+                <ul>
+                    <li>Требования к мобильному приложению «Запись на приём» для Android</li>
+                </ul>
+            </div>
+            <div class="highlight-box">
+                <strong>Вне границ данного SRS остаются:</strong>
+                <ul>
+                    <li>Реализация и архитектура серверной части (бэкенд), а также API для интеграции с МИС и внешними сервисами описываются в отдельном документе. В данном SRS указываются только требования к взаимодействию с ними.</li>
+                </ul>
+            </div>
 
-        <h3>2.2 Управление профилем</h3>
-        <ul>
-            <li><strong>ФТ003:</strong> Заполнение профиля (ФИО, полис, дата рождения)</li>
-            <li><strong>ФТ004:</strong> Добавление профилей членов семьи</li>
-        </ul>
+            <h3>1.3. Целевая аудитория и использование документа</h3>
+            <p><strong>Документ предназначен для:</strong></p>
+            <ol>
+                <li>Заказчика (для подтверждения соответствия продукта ожиданиям)</li>
+                <li>Разработчиков (для реализации функционала)</li>
+                <li>Тестировщиков (для создания тест-кейсов и проверки)</li>
+                <li>Технических писателей (для создания пользовательской документации)</li>
+            </ol>
 
-        <h3>2.3 Поиск и выбор врача</h3>
-        <ul>
-            <li><strong>ФТ007:</strong> Фильтрация по специальности/стажу/отзывам</li>
-            <li><strong>ФТ008:</strong> Карточка врача с отзывами (интеграция с ПроДокторов)</li>
-            <li><strong>ФТ009:</strong> Добавление в «Избранное»</li>
-        </ul>
+            <h3>1.4. Ссылки</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Наименование</th>
+                        <th>Описание</th>
+                        <th>Ссылка</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ISO/IEC/IEEE 29148:2011</td>
+                        <td>Стандарт на написание требований к системам и ПО</td>
+                        <td><a href="https://www.well-architected-guide.com/documents/iso-iec-ieee-29148-template/" target="_blank">Ссылка</a></td>
+                    </tr>
+                    <tr>
+                        <td>Yandex MapKit SDK для Android</td>
+                        <td>Главная страница документации MapKit (Android)</td>
+                        <td><a href="https://yandex.ru/dev/mapkit/" target="_blank">Ссылка</a></td>
+                    </tr>
+                    <tr>
+                        <td>Yandex MapKit API Reference (JavaDoc)</td>
+                        <td>Справочник API (классы, методы, пакеты) для разработки под Android</td>
+                        <td><a href="https://yandex.ru/dev/mapkit/doc/com/yandex/mapkit/MapKit" target="_blank">Ссылка</a></td>
+                    </tr>
+                    <tr>
+                        <td>Yandex MapKit. Руководство по началу работы</td>
+                        <td>Пошаговая инструкция по интеграции MapKit в Android-проект</td>
+                        <td><a href="https://yandex.ru/maps-api/docs/mapkit/android/generated/getting_started.html" target="_blank">Ссылка</a></td>
+                    </tr>
+                    <tr>
+                        <td>API ПроДокторов</td>
+                        <td>Интеграция с сайтом отзывов о врачах и клиниках</td>
+                        <td><a href="https://api.prodoctorov.ru/v2/" target="_blank">Ссылка</a></td>
+                    </tr>
+                    <tr>
+                        <td>Нетрика (N3. Запись на приём к врачу)</td>
+                        <td>Интеграционная платформа для записи на приём. Позволяет подключать МП к единой системе электронной записи через API</td>
+                        <td><a href="https://api.n3med.ru" target="_blank">Ссылка</a></td>
+                    </tr>
+                    <tr>
+                        <td>Календарь ОС. Android</td>
+                        <td>API для добавления событий в календарь на устройствах Android. Позволяет интегрировать напоминания о записи к врачу</td>
+                        <td><a href="https://developer.android.com/guide/topics/providers/calendar-provider?hl=ru" target="_blank">Ссылка</a></td>
+                    </tr>
+                </tbody>
+            </table>
 
-        <h3>2.4 Запись к врачу</h3>
-        <ul>
-            <li><strong>ФТ011:</strong> Календарь с доступными слотами</li>
-            <li><strong>ФТ013:</strong> Выбор формата приёма (онлайн/офлайн)</li>
-            <li><strong>ФТ015:</strong> Поле «Комментарий для клиники»</li>
-            <li><strong>ФТ018:</strong> Push/SMS/e-mail напоминания</li>
-        </ul>
+            <h3>1.5. Определения, аббревиатуры и сокращения</h3>
+            <ol>
+                <li><strong>SRS</strong> (Software Requirements Specifications) – спецификация требований к ПО</li>
+                <li><strong>ISO/IEC/IEEE 29148</strong> – международный стандарт</li>
+                <li><strong>API</strong> – программный интерфейс для обмена данными между сервисами</li>
+                <li><strong>ИС</strong> – Информационные системы</li>
+                <li><strong>ПО</strong> – Программное обеспечение</li>
+                <li><strong>ПП</strong> – программный продукт</li>
+                <li><strong>ОС</strong> – операционная система</li>
+                <li><strong>МП</strong> – мобильное приложение</li>
+                <li><strong>МИС</strong> (медицинская информационная система)</li>
+            </ol>
 
-        <h2>3. Нефункциональные требования</h2>
+            <h3>1.6. Обзор документа</h3>
+            <ul>
+                <li><strong>Раздел 2</strong> содержит общее описание системы, её контекст и характеристики пользователей</li>
+                <li><strong>Раздел 3</strong> детализирует функциональные требования, которые система должна выполнять</li>
+                <li><strong>Раздел 4</strong> описывает нефункциональные требования: производительность, безопасность и надёжность</li>
+                <li><strong>Раздел 5</strong> определяет требования к внешним интерфейсам (пользовательским, программным, аппаратным)</li>
+                <li><strong>Раздел 6</strong> описывает прочие требования</li>
+                <li><strong>Раздел 7</strong> описывает методы верификации и критерии приемки системы</li>
+            </ul>
+        </section>
 
-        <h3>3.1 Производительность</h3>
-        <ul>
-            <li><strong>НФТ001:</strong> Отображение экранов ≤ 5 секунд</li>
-            <li><strong>НФТ002:</strong> Построение маршрута ≤ 2 секунды</li>
-            <li><strong>НФТ003:</strong> Потребление памяти ≤ 150 МБ</li>
-        </ul>
+        <hr class="section-divider">
 
-        <h3>3.2 Надёжность</h3>
-        <ul>
-            <li><strong>НФТ005:</strong> Uptime ≥ 99.9%</li>
-            <li><strong>НФТ004:</strong> Работа при обрыве соединения (кэширование)</li>
-        </ul>
+        <section id="general">
+            <h2>2. Общее описание</h2>
 
-        <h2>4. Внешние интерфейсы</h2>
+            <h3>2.1. Перспектива системы или продукта</h3>
+            <p>Приложение «Запись на приём» является самостоятельным ПП, предназначенным для установки на мобильные устройства под управлением ОС Android.</p>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Интерфейс</th>
-                    <th>Назначение</th>
-                    <th>Формат</th>
-                    <th>Протокол</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>API Нетрика (N3)</td>
-                    <td>Запись на приём, расписание</td>
-                    <td>JSON</td>
-                    <td>HTTPS</td>
-                </tr>
-                <tr>
-                    <td>API ПроДокторов</td>
-                    <td>Рейтинги и отзывы</td>
-                    <td>JSON</td>
-                    <td>HTTPS</td>
-                </tr>
-                <tr>
-                    <td>Yandex MapKit SDK</td>
-                    <td>Карты, маршруты</td>
-                    <td>-</td>
-                    <td>HTTPS</td>
-                </tr>
-            </tbody>
-        </table>
+            <h3>2.2. Функции системы или продукта</h3>
+            
+            <h4>2.2.1. Навигация и информация о клинике</h4>
+            <ol>
+                <li>Отображение списка клиник (если сеть) с указанием адреса и расстояния до пользователя</li>
+                <li>Показывает путь до выбранной клиники (интеграция с Яндекс.Картами)</li>
+                <li>Отображение рейтинга клиники (интеграция с сервисом «ПроДокторов»)</li>
+            </ol>
 
-        <a href="https://svetlayadonna.github.io/my-pet-projects/" class="back-link">← Вернуться к портфолио</a>
+            <h4>2.2.2. Управление профилем</h4>
+            <ol>
+                <li>Заполнение профиля (ФИО, полис, дата рождения)</li>
+                <li>Привязка профилей членов семьи</li>
+            </ol>
+
+            <h4>2.2.3. Выбор пациента для записи</h4>
+            <ol>
+                <li>Выбор «Для себя» или «Для другого» (из списка привязанных профилей или добавление нового)</li>
+            </ol>
+
+            <h4>2.2.4. Поиск и выбор врача</h4>
+            <ol>
+                <li>Фильтрация по специальности/стажу/отзывам</li>
+                <li>Добавление врачей в «Избранное»</li>
+                <li>Отображение проверенных отзывов (интеграция с сервисом «ПроДокторов»)</li>
+            </ol>
+
+            <h4>2.2.5. Запись к врачу (включает в себя):</h4>
+            <ol>
+                <li>Выбор доступной даты и времени (календарь с ближайшим слотом)</li>
+                <li>Выбор формата приёма (онлайн / офлайн)</li>
+                <li>Поле «Комментарий для клиники» (для особых потребностей)</li>
+                <li>Подтверждение записи с отображением номера</li>
+                <li>Напоминания (push/SMS/e-mail с настраиваемым временем и ссылкой на видеозвонок, если формат онлайн)</li>
+            </ol>
+
+            <h4>2.2.6. Управление записью</h4>
+            <ol>
+                <li>Отмена записи</li>
+                <li>Перенос записи с автоматическим подбором свободных слотов</li>
+                <li>Смена пациента в существующей записи</li>
+            </ol>
+
+            <h3>2.3. Характеристики пользователей</h3>
+            <p>Пользователи смартфонов на Android, нуждающиеся в записи к врачу.</p>
+
+            <h3>2.4. Ограничения, допущения и зависимости</h3>
+            
+            <h4>Ограничения:</h4>
+            <ol>
+                <li>Приложение работает при наличии интернет-соединения (для получения актуальных данных)</li>
+                <li>Поддерживаемая ОС: Android 8.0 и выше</li>
+                <li>Размер экрана: не менее 4.5 дюймов</li>
+            </ol>
+
+            <h4>Допущения:</h4>
+            <ol>
+                <li>Пользователь дал разрешение на доступ к геолокации (для построения пути до клиники)</li>
+                <li>Устройство имеет доступ к интернету</li>
+            </ol>
+
+            <h4>Зависимости:</h4>
+            <ol>
+                <li>Работоспособность функций навигации зависит от доступности и корректной работы API Яндекс.Карт</li>
+                <li>Функция отображения проверенных отзывов зависит от стабильной работы API сервиса «ПроДокторов»</li>
+                <li>Функция онлайн-записи зависит от доступности API интеграционной платформы «Нетрика» и готовности медицинской информационной системы (МИС) клиники принимать данные</li>
+                <li>Актуальность расписания врачей и записи зависит от своевременного обновления данных в МИС клиники</li>
+            </ol>
+
+            <h3>2.5. Операционная среда</h3>
+            <ol>
+                <li>ОС: Android 8.0 и выше</li>
+                <li>Устройства: смартфоны с размером экрана ≥ 4.5 дюймов</li>
+                <li>Сеть: Wi-Fi или мобильные данные (3G/4G/5G)</li>
+            </ol>
+        </section>
+
+        <hr class="section-divider">
+
+        <section id="functional">
+            <h2>3. Функциональные требования</h2>
+
+            <h3>3.1. Группа: Навигация и информация о клинике</h3>
+            <div class="requirement">
+                <span class="requirement-id">ФТ001.</span> Приложение должно определять геолокацию пользователя (с его разрешения) для отображения ближайших клиник в списке.
+            </div>
+            <div class="requirement">
+                <span class="requirement-id">ФТ002.</span> Приложение должно отображать маршрут от текущего местоположения пользователя до выбранной клиники на карте (интеграция с Яндекс.Картами) и показывать ориентировочное время в пути.
+            </div>
+
+            <h3>3.2. Группа: Управление профилем</h3>
+            <div class="requirement">
+                <span class="requirement-id">ФТ003.</span> Приложение должно предоставлять возможность заполнения профиля пользователя: ФИО, номер полиса ОМС/ДМС, дата рождения и т.д.
+            </div>
+            <div class="requirement">
+                <span class="requirement-id">ФТ004.</span> Приложение должно позволять добавлять, редактировать и удалять профили членов семьи.
+            </div>
+
+            <h3>3.3. Группа: Выбор пациента для записи</h3>
+            <div class="requirement">
+                <span class="requirement-id">ФТ005.</span> Приложение должно предоставлять выбор «Для себя» / «Для другого» перед началом выбора врача.
+            </div>
+            <div class="requirement">
+                <span class="requirement-id">ФТ006.</span> При выборе «Для другого» приложение должно отображать список добавленных профилей членов семьи и давать возможность выбрать нужный.
+            </div>
+
+            <h3>3.4. Группа: Поиск и выбор врача</h3>
+            <div class="requirement">
+                <span class="requirement-id">ФТ007.</span> Приложение должно отображать список врачей с возможностью фильтрации по специальности, стажу работы и рейтингу (по отзывам).
+            </div>
+            <div class="requirement">
+                <span class="requirement-id">ФТ008.</span> Приложение должно предоставлять карточку врача с подробной информацией: ФИО, специальность, стаж, рейтинг, список проверенных отзывов (интеграция с сервисом «ПроДокторов»).
+            </div>
+            <div class="requirement">
+                <span class="requirement-id">ФТ009.</span> Приложение должно позволять добавлять врачей в «Избранное» и удалять из избранного.
+            </div>
+            <div class="requirement">
+                <span class="requirement-id">ФТ010.</span> Приложение должно отображать отдельный экран «Избранное» со списком сохранённых врачей.
+            </div>
+
+            <h3>3.5. Группа: Запись к врачу</h3>
+            <div class="requirement">
+                <span class="requirement-id">ФТ011.</span> Приложение должно отображать календарь с доступными слотами для выбранного врача. Недоступные слоты должны быть заблокированы.
+            </div>
+            <div class="requirement">
+                <span class="requirement-id">ФТ012.</span> Приложение должно автоматически подсвечивать ближайший доступный слот для записи.
+            </div>
+            <div class="requirement">
+                <span class="requirement-id">ФТ013.</span> Приложение должно позволять пользователю выбрать формат приёма: онлайн (видеоконсультация) или офлайн (визит в клинику).
+            </div>
+            <div class="requirement">
+                <span class="requirement-id">ФТ014.</span> При выборе онлайн-формата приложение должно показывать информационный чек-лист «Когда подходит онлайн-приём».
+            </div>
+            <div class="requirement">
+                <span class="requirement-id">ФТ015.</span> Приложение должно содержать поле «Комментарий для клиники» для указания особых потребностей (например, необходимость инвалидной коляски).
+            </div>
+            <div class="requirement">
+                <span class="requirement-id">ФТ016.</span> Приложение должно отображать экран подтверждения записи со всеми выбранными данными (пациент, врач, дата, время, формат, комментарий).
+            </div>
+            <div class="requirement">
+                <span class="requirement-id">ФТ017.</span> После подтверждения записи приложение должно показывать экран успеха с уникальным номером записи и отправлять in-app уведомление.
+            </div>
+
+            <h3>3.6. Группа: Уведомления и напоминания</h3>
+            <div class="requirement">
+                <span class="requirement-id">ФТ018.</span> Приложение должно отправлять push/SMS/e-mail напоминания о предстоящем приёме за 1 день и за 1 час до визита (время напоминания должно быть настраиваемым).
+            </div>
+            <div class="requirement">
+                <span class="requirement-id">ФТ019.</span> В напоминании для онлайн-приёма должна быть прямая ссылка на видеозвонок.
+            </div>
+            <div class="requirement">
+                <span class="requirement-id">ФТ020.</span> Приложение должно предоставлять кнопку «Добавить в календарь» в напоминании для сохранения события в календарь ОС.
+            </div>
+
+            <h3>3.7. Группа: Управление записью (отмена / перенос)</h3>
+            <div class="requirement">
+                <span class="requirement-id">ФТ021.</span> Приложение должно позволять отменять запись из раздела «Мои приёмы» (предстоящие) с запросом подтверждения.
+            </div>
+            <div class="requirement">
+                <span class="requirement-id">ФТ022.</span> Приложение должно позволять переносить запись на другую дату и время с автоматическим подбором ближайших свободных слотов.
+            </div>
+            <div class="requirement">
+                <span class="requirement-id">ФТ023.</span> Приложение должно предоставлять возможность сменить пациента в существующей записи (если пользователь ошибся при выборе).
+            </div>
+
+            <h3>3.8. Группа: Просмотр истории</h3>
+            <div class="requirement">
+                <span class="requirement-id">ФТ024.</span> Приложение должно отображать список предстоящих приёмов и историю прошедших приёмов (две вкладки в разделе «Мои приёмы»).
+            </div>
+        </section>
+
+        <hr class="section-divider">
+
+        <section id="nonfunctional">
+            <h2>4. Нефункциональные требования</h2>
+
+            <h3>4.1. Требования к производительности</h3>
+            <div class="requirement">
+                <span class="requirement-id">НФТ001.</span> Отображение экранов (список врачей, календарь, подтверждение записи) после загрузки данных должно занимать не более 5 секунд при стабильном интернет-соединении.
+            </div>
+            <div class="requirement">
+                <span class="requirement-id">НФТ002.</span> Построение маршрута до клиники (интеграция с Яндекс.Картами) должно отображаться не более, чем через 2 секунды после нажатия кнопки «Построить маршрут».
+            </div>
+            <div class="requirement">
+                <span class="requirement-id">НФТ003.</span> Приложение должно потреблять не более 50 МБ оперативной памяти в фоновом режиме и не более 150 МБ при активном использовании (карта, календарь).
+            </div>
+
+            <h3>4.2. Требования к надёжности и доступности</h3>
+            <div class="requirement">
+                <span class="requirement-id">НФТ004.</span> Приложение должно сохранять работоспособность при обрыве интернет-соединения: показывать кэшированные данные (список врачей, последние отзывы) и уведомлять пользователя об отсутствии соединения.
+            </div>
+            <div class="requirement">
+                <span class="requirement-id">НФТ005.</span> Система должна работать без перебоев не менее 99,9% времени.
+            </div>
+            <div class="requirement">
+                <span class="requirement-id">НФТ006.</span> Система должна быть доступна пользователям из любой точки России.
+            </div>
+
+            <h3>4.3. Требования к удобству использования</h3>
+            <div class="requirement">
+                <span class="requirement-id">НФТ007.</span> Все обязательные поля для заполнения профиля (ФИО, полис, дата рождения) должны быть явно помечены звёздочкой.
+            </div>
+            <div class="requirement">
+                <span class="requirement-id">НФТ008.</span> Экран должен поддерживать вертикальную прокрутку для просмотра списков (врачей, клиник).
+            </div>
+            <div class="requirement">
+                <span class="requirement-id">НФТ009.</span> Переключение между вкладками «Для себя» / «Для другого», «Предстоящие» / «Прошедшие», «Свой профиль» / «Профиль членов семьи» должно происходить одним нажатием (без перезагрузки экрана).
+            </div>
+            <div class="requirement">
+                <span class="requirement-id">НФТ010.</span> При вводе данных в полях (например, серия/номер полиса) должны отображаться подсказки по формату ввода.
+            </div>
+            <div class="requirement">
+                <span class="requirement-id">НФТ011.</span> При выборе даты и времени в календаре недоступные слоты должны быть визуально заблокированы (серым цветом) и не реагировать на нажатие.
+            </div>
+            <div class="requirement">
+                <span class="requirement-id">НФТ012.</span> Приложение должно поддерживать адаптивный дизайн для экранов от 4.5 до 7 дюймов, все элементы должны быть читаемы без масштабирования.
+            </div>
+
+            <h3>4.4. Требования к сопровождаемости и совместимости</h3>
+            <div class="requirement">
+                <span class="requirement-id">НФТ013.</span> Приложение должно корректно запускаться и работать на всех устройствах с ОС Android версии 8.0 и выше.
+            </div>
+            <div class="requirement">
+                <span class="requirement-id">НФТ014.</span> Приложение должно корректно отображаться на мобильных устройствах с размером экрана не менее 4.5 дюймов.
+            </div>
+        </section>
+
+        <hr class="section-divider">
+
+        <section id="interfaces">
+            <h2>5. Требования к внешним интерфейсам</h2>
+
+            <h3>5.1. Пользовательские интерфейсы</h3>
+            <ul>
+                <li><strong>Главный экран:</strong> новости и акции</li>
+                <li><strong>Экран «Записаться на приём»:</strong> список врачей с фильтрацией по специальности, стажу, отзывам (интеграция с сервисом «ПроДокторов»). При нажатии на врача открывается «Карточка врача»</li>
+                <li><strong>Экран «Карточка врача»:</strong> отображает ФИО врача, специальность, стаж, рейтинг, отзывы</li>
+                <li><strong>Экран «Мои приёмы»:</strong> две вкладки: «Предстоящие» – содержит список предстоящих приёмов, «Прошедшие» – содержит список прошедших приёмов (история). Обе вкладки с фильтрацией по пользователю</li>
+                <li><strong>Экран «Профиль»:</strong> две вкладки: «Свой профиль» – содержит данные пользователя. «Профиль членов семьи» – содержит список профилей членов семьи</li>
+                <li><strong>Экран «Клиники»:</strong> список клиник. При нажатии на клинику открывается «Карточка клиники»</li>
+                <li><strong>Экран «Карточка клиники»:</strong> отображает фотографии клиники, часы работы, контакты, расположение на интерактивной карте (интеграция с Яндекс.Картами)</li>
+                <li><strong>Экран «Избранное»:</strong> список врачей, добавленных в избранное. При нажатии на врача открывается его карточка</li>
+            </ul>
+
+            <h3>5.2. Аппаратные интерфейсы</h3>
+            <ul>
+                <li>Приложение должно использовать GPS для определения геолокации</li>
+                <li>Приложение должно поддерживать мультитач-взаимодействие через сенсорный экран</li>
+            </ul>
+
+            <h3>5.3. Программные интерфейсы</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Наименование интерфейса</th>
+                        <th>Назначение</th>
+                        <th>Формат данных</th>
+                        <th>Протокол</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>API «Нетрика (N3)»</td>
+                        <td>Запись на приём, получение расписания врачей, доступных слотов, создание/отмена записи</td>
+                        <td>JSON</td>
+                        <td>HTTPS</td>
+                    </tr>
+                    <tr>
+                        <td>API «ПроДокторов»</td>
+                        <td>Получение рейтингов, отзывов о врачах и клиниках</td>
+                        <td>JSON</td>
+                        <td>HTTPS</td>
+                    </tr>
+                    <tr>
+                        <td>Yandex MapKit SDK</td>
+                        <td>Отображение клиник на карте, построение маршрута, геокодирование</td>
+                        <td>-</td>
+                        <td>HTTPS</td>
+                    </tr>
+                    <tr>
+                        <td>Android Calendar Provider</td>
+                        <td>Добавление записи на приём в системный календарь устройства</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>5.4. Коммуникационные интерфейсы</h3>
+            <ul>
+                <li><strong>Протокол:</strong> HTTPS</li>
+                <li><strong>Формат запросов:</strong> REST GET с параметрами</li>
+                <li><strong>Кодировка:</strong> UTF-8</li>
+            </ul>
+        </section>
+
+        <hr class="section-divider">
+
+        <section id="other">
+            <h2>6. Прочие требования</h2>
+            <div class="requirement">
+                <span class="requirement-id">БТ001.</span> Количество пользователей приложения «Запись на приём» должно увеличиться к концу года на 30%.
+            </div>
+            <div class="requirement">
+                <span class="requirement-id">БТ002.</span> Средний рейтинг приложения в Google Play после первого месяца эксплуатации – не ниже 4.3.
+            </div>
+            <div class="requirement">
+                <span class="requirement-id">БТ003.</span> Доля успешных записей на приём (без ошибок) – не менее 98%.
+            </div>
+        </section>
+
+        <hr class="section-divider">
+
+        <section id="verification">
+            <h2>7. Верификация и валидация</h2>
+
+            <h3>7.1. Критерии приёмки</h3>
+            <ol>
+                <li>Приложение успешно проходит все функциональные тесты</li>
+                <li>Время отображения информации не превышает 5 секунд</li>
+                <li>Приложение работает на Android 8.0+ и экранах ≥ 4.5"</li>
+                <li>Геолокация определяет местоположение при каждом запуске</li>
+            </ol>
+        </section>
+
+        <div style="text-align: center; margin-top: 60px;">
+            <a href="https://svetlayadonna.github.io/my-pet-projects/" class="back-button">← Вернуться к портфолио</a>
+        </div>
     </div>
 </body>
 </html>
