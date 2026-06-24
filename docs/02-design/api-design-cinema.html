@@ -5,6 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Проектирование API: Кинотеатр «Искорка» | Светлана Стащук</title>
     <style>
+        .resource-table {
+    font-size: 0.9em;
+    margin: 25px 0;
+    border-collapse: collapse;
+    width: 100%;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.resource-table th {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 600;
+    border: 1px solid #667eea;
+}
+
+.resource-table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    vertical-align: top;
+    line-height: 1.6;
+}
+
+.resource-table tr:nth-child(even) {
+    background: #f8f9fa;
+}
+
+.resource-table tr:hover {
+    background: #e9ecef;
+}
         * {
             margin: 0;
             padding: 0;
@@ -732,146 +763,215 @@
                 </ul>
             </div>
 
-            <h3>🎥 Ресурс: Сеансы (sessions)</h3>
-            <p>Полная структура ответа для методов, возвращающих информацию о сеансе:</p>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Имя</th>
-                        <th>Тип</th>
-                        <th>Описание поля</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>id</strong></td>
-                        <td>integer</td>
-                        <td>Идентификатор сеанса</td>
-                    </tr>
-                    <tr>
-                        <td><strong>hall</strong></td>
-                        <td>object</td>
-                        <td>
-                            Объект «Зал», состоит из:
-                            <ul class="nested-list">
-                                <li><code>id</code> (integer) — идентификатор зала</li>
-                                <li><code>name</code> (string) — наименование зала</li>
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>film</strong></td>
-                        <td>object</td>
-                        <td>
-                            Объект «Фильм», состоит из:
-                            <ul class="nested-list">
-                                <li><code>id</code> (integer) — идентификатор фильма</li>
-                                <li><code>name</code> (string) — название фильма</li>
-                                <li><code>genre</code> (string) — жанр</li>
-                                <li><code>description</code> (string) — описание</li>
-                                <li><code>age_rating</code> (enum: '0+', '6+', '12+', '16+', '18+') — возрастное ограничение</li>
-                                <li><code>duration</code> (integer) — продолжительность в минутах</li>
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>start_datetime</strong></td>
-                        <td>string (DateTime)</td>
-                        <td>Дата и время начала сеанса</td>
-                    </tr>
-                    <tr>
-                        <td><strong>seats</strong></td>
-                        <td>array of objects</td>
-                        <td>
-                            Массив объектов «Места», каждый состоит из:
-                            <ul class="nested-list">
-                                <li><code>id</code> (integer) — идентификатор места</li>
-                                <li><code>row_number</code> (integer) — номер ряда</li>
-                                <li><code>seat_number</code> (integer) — номер места</li>
-                                <li><code>status</code> (enum: 'free', 'booked') — статус места</li>
-                            </ul>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+           <!-- Вставьте этот код в раздел 4 (после вступительного текста про ресурсы) -->
 
-            <h3>🎫 Ресурс: Брони (bookings)</h3>
-            <p>Полная структура ответа для методов, возвращающих информацию о брони:</p>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Имя</th>
-                        <th>Тип</th>
-                        <th>Описание поля</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>id</strong></td>
-                        <td>integer</td>
-                        <td>Идентификатор брони</td>
-                    </tr>
-                    <tr>
-                        <td><strong>user</strong></td>
-                        <td>object</td>
-                        <td>
-                            Объект «Пользователь», состоит из:
-                            <ul class="nested-list">
-                                <li><code>id</code> (integer) — идентификатор пользователя</li>
-                                <li><code>username</code> (string) — логин пользователя</li>
-                                <li><code>phone</code> (string, format: phone) — телефон пользователя</li>
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>tickets</strong></td>
-                        <td>array of objects</td>
-                        <td>
-                            Массив объектов «Билет», каждый состоит из:
-                            <ul class="nested-list">
-                                <li><code>id</code> (integer) — идентификатор билета</li>
-                                <li><code>session</code> (object) — объект «Сеанс»:
-                                    <ul class="nested-list">
-                                        <li><code>id</code> (integer)</li>
-                                        <li><code>hall</code> (object: id, name)</li>
-                                        <li><code>film</code> (object: id, name, genre, description, age_rating, duration)</li>
-                                    </ul>
-                                </li>
-                                <li><code>seat</code> (object) — объект «Место»:
-                                    <ul class="nested-list">
-                                        <li><code>id</code> (integer)</li>
-                                        <li><code>row_number</code> (integer)</li>
-                                        <li><code>seat_number</code> (integer)</li>
-                                    </ul>
-                                </li>
-                                <li><code>price</code> (string, format: Money) — цена билета</li>
-                                <li><code>status</code> (enum: 'active', 'canceled', 'used') — статус билета</li>
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>sum</strong></td>
-                        <td>string (Money)</td>
-                        <td>Сумма брони по всем билетам</td>
-                    </tr>
-                    <tr>
-                        <td><strong>status</strong></td>
-                        <td>enum</td>
-                        <td>Статус брони: <code>'active'</code>, <code>'canceled'</code>, <code>'expired'</code>, <code>'modified'</code></td>
-                    </tr>
-                    <tr>
-                        <td><strong>date_created</strong></td>
-                        <td>string (DateTime)</td>
-                        <td>Дата и время создания брони</td>
-                    </tr>
-                    <tr>
-                        <td><strong>date_modified</strong></td>
-                        <td>string (DateTime)</td>
-                        <td>Дата и время изменения брони</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
+<h3>4.1. Ресурс: sessions (Сеансы)</h3>
+<p>Полная структура ответа метода <code>GET /sessions/{id}/seats</code>:</p>
+
+<table class="resource-table">
+    <thead>
+        <tr>
+            <th style="width: 25%;">Имя</th>
+            <th style="width: 25%;">Тип</th>
+            <th style="width: 50%;">Описание поля</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>id</strong></td>
+            <td>integer</td>
+            <td>Идентификатор сеанса</td>
+        </tr>
+        <tr>
+            <td>
+                <strong>hall</strong><br>
+                &nbsp;&nbsp;• id<br>
+                &nbsp;&nbsp;• name
+            </td>
+            <td>
+                object (<br>
+                &nbsp;&nbsp;• integer<br>
+                &nbsp;&nbsp;• string
+                )
+            </td>
+            <td>
+                <strong>Объект, состоящий из:</strong><br>
+                &nbsp;&nbsp;• идентификатора зала<br>
+                &nbsp;&nbsp;• наименования зала
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>film</strong><br>
+                &nbsp;&nbsp;• id<br>
+                &nbsp;&nbsp;• name<br>
+                &nbsp;&nbsp;• genre<br>
+                &nbsp;&nbsp;• description<br>
+                &nbsp;&nbsp;• age_rating<br>
+                &nbsp;&nbsp;• duration
+            </td>
+            <td>
+                object (<br>
+                &nbsp;&nbsp;• integer<br>
+                &nbsp;&nbsp;• string<br>
+                &nbsp;&nbsp;• string<br>
+                &nbsp;&nbsp;• string<br>
+                &nbsp;&nbsp;• enum: '0+', '6+', '12+', '16+'<br>
+                &nbsp;&nbsp;• integer
+                )
+            </td>
+            <td>
+                <strong>Объект, состоящий из:</strong><br>
+                &nbsp;&nbsp;• идентификатора фильма<br>
+                &nbsp;&nbsp;• наименования фильма<br>
+                &nbsp;&nbsp;• жанра<br>
+                &nbsp;&nbsp;• описания<br>
+                &nbsp;&nbsp;• ограничения по возрасту<br>
+                &nbsp;&nbsp;• продолжительности
+            </td>
+        </tr>
+        <tr>
+            <td><strong>start_datetime</strong></td>
+            <td>string (format: DateTime)</td>
+            <td>Дата и время начала сеанса</td>
+        </tr>
+        <tr>
+            <td>
+                <strong>seat</strong><br>
+                &nbsp;&nbsp;• id<br>
+                &nbsp;&nbsp;• row_number<br>
+                &nbsp;&nbsp;• seat_number<br>
+                &nbsp;&nbsp;• status
+            </td>
+            <td>
+                array (object (<br>
+                &nbsp;&nbsp;• integer<br>
+                &nbsp;&nbsp;• integer<br>
+                &nbsp;&nbsp;• integer<br>
+                &nbsp;&nbsp;• enum: 'free', 'booked'<br>
+                ))
+            </td>
+            <td>
+                <strong>Массив объектов (Список мест на сеанс), состоящий из:</strong><br>
+                &nbsp;&nbsp;• идентификатор места<br>
+                &nbsp;&nbsp;• номер ряда<br>
+                &nbsp;&nbsp;• номер места<br>
+                &nbsp;&nbsp;• статус места ('свободно' / 'занято')
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>4.2. Ресурс: bookings (Брони)</h3>
+<p>Полная структура ответа методов <code>POST /bookings</code> и <code>PATCH /bookings/{id}</code>:</p>
+
+<table class="resource-table">
+    <thead>
+        <tr>
+            <th style="width: 25%;">Имя</th>
+            <th style="width: 25%;">Тип</th>
+            <th style="width: 50%;">Описание поля</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>id</strong></td>
+            <td>integer</td>
+            <td>Идентификатор брони</td>
+        </tr>
+        <tr>
+            <td>
+                <strong>user</strong><br>
+                &nbsp;&nbsp;• id<br>
+                &nbsp;&nbsp;• username<br>
+                &nbsp;&nbsp;• phone
+            </td>
+            <td>
+                object (<br>
+                &nbsp;&nbsp;• integer<br>
+                &nbsp;&nbsp;• string<br>
+                &nbsp;&nbsp;• string (format: phone)
+                )
+            </td>
+            <td>
+                <strong>Объект, состоящий из:</strong><br>
+                &nbsp;&nbsp;• идентификатора пользователя<br>
+                &nbsp;&nbsp;• логина пользователя<br>
+                &nbsp;&nbsp;• телефона пользователя
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>tickets</strong><br>
+                &nbsp;&nbsp;• id<br>
+                &nbsp;&nbsp;• session (<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;◦ id<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;◦ hall<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;◦ film<br>
+                &nbsp;&nbsp;)<br>
+                &nbsp;&nbsp;• seat (<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;◦ id<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;◦ row_number<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;◦ seat_number<br>
+                &nbsp;&nbsp;)<br>
+                &nbsp;&nbsp;• price<br>
+                &nbsp;&nbsp;• status
+            </td>
+            <td>
+                array (object (<br>
+                &nbsp;&nbsp;• integer<br>
+                &nbsp;&nbsp;• object (<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;◦ integer<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;◦ object (hall, film)<br>
+                &nbsp;&nbsp;)<br>
+                &nbsp;&nbsp;• object (<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;◦ integer<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;◦ integer<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;◦ integer<br>
+                &nbsp;&nbsp;)<br>
+                &nbsp;&nbsp;• string (format: Money)<br>
+                &nbsp;&nbsp;• enum: 'active', 'canceled', 'used'<br>
+                ))
+            </td>
+            <td>
+                <strong>Массив билетов (объектов), состоящий из:</strong><br>
+                &nbsp;&nbsp;• идентификатора билета<br>
+                &nbsp;&nbsp;• объект "Сеанс" (<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;◦ идентификатор сеанса<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;◦ зал<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;◦ фильм<br>
+                &nbsp;&nbsp;)<br>
+                &nbsp;&nbsp;• объект "Место" (<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;◦ идентификатор места<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;◦ номер ряда<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;◦ номер места<br>
+                &nbsp;&nbsp;)<br>
+                &nbsp;&nbsp;• цена билета<br>
+                &nbsp;&nbsp;• статус билета ('активен', 'отменен', 'использован')
+            </td>
+        </tr>
+        <tr>
+            <td><strong>sum</strong></td>
+            <td>string (format: Money)</td>
+            <td>Сумма брони по всем билетам</td>
+        </tr>
+        <tr>
+            <td><strong>status</strong></td>
+            <td>enum</td>
+            <td>Статус брони: 'active', 'canceled', 'expired', 'modified'</td>
+        </tr>
+        <tr>
+            <td><strong>date_created</strong></td>
+            <td>string (format: DateTime)</td>
+            <td>Дата и время создания брони</td>
+        </tr>
+        <tr>
+            <td><strong>date_modified</strong></td>
+            <td>string (format: DateTime)</td>
+            <td>Дата и время изменения брони</td>
+        </tr>
+    </tbody>
+</table>
 
         <hr class="section-divider">
 
