@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CJM: Мобильное приложение «Запись на приём» | Светлана Стащук</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f0f2f5;
+            color: #333;
+            line-height: 1.7;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 60px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 30px;
+            border-bottom: 3px solid #667eea;
+            margin-bottom: 40px;
+        }
+        h1 {
+            color: #667eea;
+            font-size: 2.8em;
+            margin-bottom: 15px;
+        }
+        .subtitle {
+            font-size: 1.3em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .meta-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 30px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .meta-item {
+            text-align: center;
+        }
+        .meta-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+        .meta-value {
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        .toc {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 40px 0;
+            border-left: 5px solid #667eea;
+        }
+        .toc h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .toc li {
+            margin: 12px 0;
+        }
+        .toc a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: color 0.3s;
+        }
+        .toc a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+        h2 {
+            color: #667eea;
+            font-size: 2.2em;
+            margin: 50px 0 25px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+        h3 {
+            color: #764ba2;
+            font-size: 1.6em;
+            margin: 35px 0 20px;
+        }
+        p {
+            margin: 15px 0;
+            font-size: 1.05em;
+        }
+        .intro-box {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 30px;
+            border-radius: 10px;
+            margin: 30px 0;
+            border-left: 5px solid #667eea;
+        }
+        .stage-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .stage-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+            border-color: #667eea;
+        }
+        .stage-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .stage-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 50px;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        .stage-title {
+            display: inline-block;
+            font-size: 1.5em;
+            color: #333;
+            font-weight: 600;
+            vertical-align: middle;
+        }
+        .stage-header {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f2f5;
+        }
+        .stage-content {
+            display: grid;
+            gap: 20px;
+        }
+        .info-row {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            align-items: start;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 1.05em;
+        }
+        .info-value {
+            color: #333;
+        }
+        .emotion-badge {
+            display: inline-block;
+            background: #fff3cd;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 1.1em;
+            border: 2px solid #ffc107;
+        }
+        .problems-list, .solutions-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        .problems-list li, .solutions-list li {
+            padding: 10px 15px;
+            margin: 8px 0;
+            background: #f8f9fa;
+            border-radius: 8px;
+            position: relative;
+            padding-left: 35px;
+        }
+        .problems-list li::before {
+            content: '⚠️';
+            position: absolute;
+            left: 10px;
+        }
+        .solutions-list li::before {
+            content: '💡';
+            position: absolute;
+            left: 10px;
+        }
+        .analysis-section {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 40px;
+            border-radius: 15px;
+            margin: 50px 0;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            color: #666;
+            font-size: 0.95em;
+        }
+        .recommendations {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .recommendation-item {
+            padding: 20px;
+            margin: 15px 0;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        .priority-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+        .priority-high {
+            background: #dc3545;
+            color: white;
+        }
+        .priority-medium {
+            background: #ffc107;
+            color: #333;
+        }
+        .priority-low {
+            background: #28a745;
+            color: white;
+        }
+        .back-button {
+            display: inline-block;
+            margin-top: 40px;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1em;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+        .emotion-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        .emotion-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .emotion-icon {
+            font-size: 1.5em;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            h2 {
+                font-size: 1.6em;
+            }
+            .info-row {
+                grid-template-columns: 1fr;
+            }
+            .stage-number {
+                width: 40px;
+                height: 40px;
+                line-height: 40px;
+                font-size: 1.2em;
+            }
+            .stage-title {
+                font-size: 1.2em;
+            }
+        }
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                padding: 20px;
+            }
+            .back-button {
+                display: none;
+            }
+            .stage-card {
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🗺️ Customer Journey Map</h1>
+            <div class="subtitle">Мобильное приложение «Запись на приём» для медицинских клиник</div>
+        </div>
+
+        <div class="meta-info">
+            <div class="meta-item">
+                <div class="meta-label">Проект</div>
+                <div class="meta-value">Мобильное приложение</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Методология</div>
+                <div class="meta-value">CJM</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Этапов</div>
+                <div class="meta-value">10</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Болевых точек</div>
+                <div class="meta-value">15+</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Улучшений UX</div>
+                <div class="meta-value">20+</div>
+            </div>
+        </div>
+
+        <div class="toc">
+            <h2>📑 Оглавление</h2>
+            <ul>
+                <li><a href="#intro">Введение и методология</a></li>
+                <li><a href="#stage1">Этап 1: Поиск информации и выбор клиники</a></li>
+                <li><a href="#stage2">Этап 2: Скачивание приложения</a></li>
+                <li><a href="#stage3">Этап 3: Заполнение профиля</a></li>
+                <li><a href="#stage4">Этап 4: Запись для себя или родственника</a></li>
+                <li><a href="#stage5">Этап 5: Выбор врача</a></li>
+                <li><a href="#stage6">Этап 6: Выбор даты и времени</a></li>
+                <li><a href="#stage7">Этап 7: Выбор формата приёма</a></li>
+                <li><a href="#stage8">Этап 8: Подтверждение записи</a></li>
+                <li><a href="#stage9">Этап 9: Напоминания о записи</a></li>
+                <li><a href="#stage10">Этап 10: Управление записью</a></li>
+                <li><a href="#analysis">Анализ и выводы</a></li>
+            </ul>
+        </div>
+
+        <section id="intro">
+            <h2>Введение и методология</h2>
+            
+            <div class="intro-box">
+                <h3>Что такое Customer Journey Map?</h3>
+                <p><strong>Customer Journey Map (CJM)</strong> — это визуализация пути клиента от первого контакта с продуктом до достижения его цели. Методология позволяет выявить болевые точки, эмоциональные спады и возможности для улучшения пользовательского опыта.</p>
+                
+                <h3 style="margin-top: 20px;">Цели анализа</h3>
+                <ul>
+                    <li>Понять реальный опыт пользователя при записи к врачу</li>
+                    <li>Выявить критические точки, где пользователь может отказаться от использования приложения</li>
+                    <li>Найти возможности для улучшения UX и повышения конверсии</li>
+                    <li>Сформировать приоритизированный список улучшений для разработки</li>
+                </ul>
+            </div>
+
+            <h3>Легенда эмоций</h3>
+            <div class="emotion-legend">
+                <div class="emotion-item">
+                    <span class="emotion-icon">😟</span>
+                    <span>Неуверенность</span>
+                </div>
+                <div class="emotion-item">
+                    <span class="emotion-icon">😐</span>
+                    <span>Ожидание</span>
+                </div>
+                <div class="emotion-item">
+                    <span class="emotion-icon">😰</span>
+                    <span>Нервозность</span>
+                </div>
+                <div class="emotion-item">
+                    <span class="emotion-icon">😕</span>
+                    <span>Лёгкая неуверенность</span>
+                </div>
+                <div class="emotion-item">
+                    <span class="emotion-icon">🤔</span>
+                    <span>Сомнение / Напряжение</span>
+                </div>
+                <div class="emotion-item">
+                    <span class="emotion-icon"></span>
+                    <span>Облегчение</span>
+                </div>
+                <div class="emotion-item">
+                    <span class="emotion-icon">😊</span>
+                    <span>Спокойствие</span>
+                </div>
+                <div class="emotion-item">
+                    <span class="emotion-icon">😤</span>
+                    <span>Раздражение</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="stage1">
+            <div class="stage-card">
+                <div class="stage-header">
+                    <span class="stage-number">1</span>
+                    <span class="stage-title">Поиск информации и выбор клиники</span>
+                </div>
+                <div class="stage-content">
+                    <div class="info-row">
+                        <div class="info-label">Действия клиента</div>
+                        <div class="info-value">Ищет клинику в интернете</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Точки контакта</div>
+                        <div class="info-value">Браузер (для первичного поиска клиники), сайт клиники</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Эмоции</div>
+                        <div class="info-value">
+                            <span class="emotion-badge">😟 Неуверенность</span>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Проблемы</div>
+                        <div class="info-value">
+                            <ul class="problems-list">
+                                <li>Сложно сравнить клиники</li>
+                                <li>Нет отзывов</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Идеи улучшения</div>
+                        <div class="info-value">
+                            <ul class="solutions-list">
+                                <li>Выдавать в верхних строчках поисковых систем</li>
+                                <li>Сделать сайт клиники удобным для пользователя</li>
+                                <li>Показывать на сайте рейтинг клиники (интеграция с сайтом "ПроДокторов")</li>
+                                <li>Добавить QR-код для скачивания мобильного приложения</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="stage2">
+            <div class="stage-card">
+                <div class="stage-header">
+                    <span class="stage-number">2</span>
+                    <span class="stage-title">Скачивание приложения выбранной клиники</span>
+                </div>
+                <div class="stage-content">
+                    <div class="info-row">
+                        <div class="info-label">Действия клиента</div>
+                        <div class="info-value">Скачивает приложение, открывает раздел «Клиники», смотрит расположение на карте, выбирает удобную по расстоянию</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Точки контакта</div>
+                        <div class="info-value">Google Play / RuStore, приложение (раздел «Клиники», карта)</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Эмоции</div>
+                        <div class="info-value">
+                            <span class="emotion-badge">😐 Ожидание, лёгкое нетерпение</span>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Проблемы</div>
+                        <div class="info-value">
+                            <ul class="problems-list">
+                                <li>Приложение занимает много места</li>
+                                <li>Непонятно, как добраться</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Идеи улучшения</div>
+                        <div class="info-value">
+                            <ul class="solutions-list">
+                                <li>Сделать приложение максимально лёгким</li>
+                                <li>Показывать путь до клиники/клиник (если это сеть) - интеграция с Яндекс.Картами</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="stage3">
+            <div class="stage-card">
+                <div class="stage-header">
+                    <span class="stage-number">3</span>
+                    <span class="stage-title">Заполнение профиля</span>
+                </div>
+                <div class="stage-content">
+                    <div class="info-row">
+                        <div class="info-label">Действия клиента</div>
+                        <div class="info-value">Заполняет свой профиль: вводит данные (ФИО, полис, дата рождения и т.д.) и, при необходимости, профиль членов семьи: ребёнок, пожилой родственник</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Точки контакта</div>
+                        <div class="info-value">Приложение (свой профиль + профиль членов семьи (опционально))</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Эмоции</div>
+                        <div class="info-value">
+                            <span class="emotion-badge">😰 Нервозность (боится ошибиться в данных)</span>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Проблемы</div>
+                        <div class="info-value">
+                            <ul class="problems-list">
+                                <li>Необходимо заполнять много полей</li>
+                                <li>Непонятно, как привязывать профили родственников к своему</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Идеи улучшения</div>
+                        <div class="info-value">
+                            <ul class="solutions-list">
+                                <li>Пометить обязательные поля для заполнения</li>
+                                <li>Возле полей размещать подсказки по заполнению</li>
+                                <li>Сделать привязку дополнительных профилей интуитивно понятной</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="stage4">
+            <div class="stage-card">
+                <div class="stage-header">
+                    <span class="stage-number">4</span>
+                    <span class="stage-title">Запись для себя или родственника</span>
+                </div>
+                <div class="stage-content">
+                    <div class="info-row">
+                        <div class="info-label">Действия клиента</div>
+                        <div class="info-value">Выбирает «Для себя» или «Для другого» (ребёнок, пожилой родитель)</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Точки контакта</div>
+                        <div class="info-value">Приложение (форма записи)</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Эмоции</div>
+                        <div class="info-value">
+                            <span class="emotion-badge"> Лёгкая неуверенность</span>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Проблемы</div>
+                        <div class="info-value">
+                            <ul class="problems-list">
+                                <li>Нет поля для особых потребностей (инвалидная коляска и т.д.)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Идеи улучшения</div>
+                        <div class="info-value">
+                            <ul class="solutions-list">
+                                <li>Добавить поле «Комментарий для клиники»</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="stage5">
+            <div class="stage-card">
+                <div class="stage-header">
+                    <span class="stage-number">5</span>
+                    <span class="stage-title">Выбор врача</span>
+                </div>
+                <div class="stage-content">
+                    <div class="info-row">
+                        <div class="info-label">Действия клиента</div>
+                        <div class="info-value">Ищет врача</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Точки контакта</div>
+                        <div class="info-value">Приложение (карточка врача с отзывами)</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Эмоции</div>
+                        <div class="info-value">
+                            <span class="emotion-badge">🤔 Заинтересованность, лёгкая неуверенность, напряжение</span>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Проблемы</div>
+                        <div class="info-value">
+                            <ul class="problems-list">
+                                <li>Нет возможности выбора доктора по специальности/стажу/отзывам</li>
+                                <li>Нет возможности добавить врача в "Избранное"</li>
+                                <li>Нет возможности проверить реальность отзывов</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Идеи улучшения</div>
+                        <div class="info-value">
+                            <ul class="solutions-list">
+                                <li>Добавить фильтры по специальности/стажу/отзывам</li>
+                                <li>Добавить возможность отметить врача "звёздочкой", т.е. поместить в раздел "Избранное"</li>
+                                <li>Показывать только проверенные отзывы: только отзывы пациентов, подтвердивших визит + интеграция с сайтом "ПроДокторов"</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="stage6">
+            <div class="stage-card">
+                <div class="stage-header">
+                    <span class="stage-number">6</span>
+                    <span class="stage-title">Выбор доступной даты и времени</span>
+                </div>
+                <div class="stage-content">
+                    <div class="info-row">
+                        <div class="info-label">Действия клиента</div>
+                        <div class="info-value">Смотрит расписание, выбирает свободную дату и время</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Точки контакта</div>
+                        <div class="info-value">Приложение (календарь)</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Эмоции</div>
+                        <div class="info-value">
+                            <span class="emotion-badge">🤔 Сомнение</span>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Проблемы</div>
+                        <div class="info-value">
+                            <ul class="problems-list">
+                                <li>Нет возможности быстрого выбора даты</li>
+                                <li>Нет возможности выбрать тип приёма: первичный/вторичный</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Идеи улучшения</div>
+                        <div class="info-value">
+                            <ul class="solutions-list">
+                                <li>На карточке врача сразу показывать ближайшую доступную дату</li>
+                                <li>Добавить возможность выбора разного типа приёмов: первичный/вторичный</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="stage7">
+            <div class="stage-card">
+                <div class="stage-header">
+                    <span class="stage-number">7</span>
+                    <span class="stage-title">Выбор формата приёма (онлайн / офлайн)</span>
+                </div>
+                <div class="stage-content">
+                    <div class="info-row">
+                        <div class="info-label">Действия клиента</div>
+                        <div class="info-value">Решает, нужен ли ему очный визит или онлайн-консультация</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Точки контакта</div>
+                        <div class="info-value">Приложение (фильтр «Онлайн / Офлайн», карточка врача)</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Эмоции</div>
+                        <div class="info-value">
+                            <span class="emotion-badge">🤔 Сомнение</span>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Проблемы</div>
+                        <div class="info-value">
+                            <ul class="problems-list">
+                                <li>Непонятно, какие услуги доступны онлайн</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Идеи улучшения</div>
+                        <div class="info-value">
+                            <ul class="solutions-list">
+                                <li>Чек-лист «Когда подходит онлайн-приём»</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="stage8">
+            <div class="stage-card">
+                <div class="stage-header">
+                    <span class="stage-number">8</span>
+                    <span class="stage-title">Подтверждение записи</span>
+                </div>
+                <div class="stage-content">
+                    <div class="info-row">
+                        <div class="info-label">Действия клиента</div>
+                        <div class="info-value">Проверяет введенные данные, нажимает кнопку «Подтвердить запись», получает первое уведомление (в приложении)</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Точки контакта</div>
+                        <div class="info-value">Приложение (экран подтверждения, in-app уведомление)</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Эмоции</div>
+                        <div class="info-value">
+                            <span class="emotion-badge">😌 Облегчение, но лёгкая тревога (вдруг не записалось)</span>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Проблемы</div>
+                        <div class="info-value">
+                            <ul class="problems-list">
+                                <li>Нет возможности увидеть номер записи</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Идеи улучшения</div>
+                        <div class="info-value">
+                            <ul class="solutions-list">
+                                <li>Показывать экран успеха с номером записи</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="stage9">
+            <div class="stage-card">
+                <div class="stage-header">
+                    <span class="stage-number">9</span>
+                    <span class="stage-title">Напоминания о записи</span>
+                </div>
+                <div class="stage-content">
+                    <div class="info-row">
+                        <div class="info-label">Действия клиента</div>
+                        <div class="info-value">Получает push / SMS / e-mail напоминание за 1 день и за 1 час до приема, может добавить событие в календарь телефона</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Точки контакта</div>
+                        <div class="info-value">Push, SMS, e-mail, календарь ОС</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Эмоции</div>
+                        <div class="info-value">
+                            <span class="emotion-badge">😊 Спокойствие, уверенность</span>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Проблемы</div>
+                        <div class="info-value">
+                            <ul class="problems-list">
+                                <li>Напоминания приходят не вовремя</li>
+                                <li>Нет ссылки на онлайн-прием в напоминании (если формат онлайн)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Идеи улучшения</div>
+                        <div class="info-value">
+                            <ul class="solutions-list">
+                                <li>Настраиваемое время напоминаний</li>
+                                <li>Ссылка на видеозвонок в push</li>
+                                <li>Кнопка «Добавить в календарь»</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="stage10">
+            <div class="stage-card">
+                <div class="stage-header">
+                    <span class="stage-number">10</span>
+                    <span class="stage-title">Управление записью (изменение / отмена)</span>
+                </div>
+                <div class="stage-content">
+                    <div class="info-row">
+                        <div class="info-label">Действия клиента</div>
+                        <div class="info-value">При необходимости отменяет или переносит запись через приложение, получает уведомление об отмене, возможно, видит альтернативные слоты</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Точки контакта</div>
+                        <div class="info-value">Приложение (раздел «Мои записи», календарь)</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Эмоции</div>
+                        <div class="info-value">
+                            <span class="emotion-badge">😤 Раздражение (если процесс сложный) или 😌 облегчение (если гибкий)</span>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Проблемы</div>
+                        <div class="info-value">
+                            <ul class="problems-list">
+                                <li>Нет возможности быстро перенести запись без потери времени</li>
+                                <li>Не показываются альтернативные слоты при переносе</li>
+                                <li>Нет возможности переписать запись на другого пациента (маму вместо себя, например)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Идеи улучшения</div>
+                        <div class="info-value">
+                            <ul class="solutions-list">
+                                <li>Кнопка «Перенести» с автоматическим подбором ближайших свободных слотов</li>
+                                <li>Возможность поменять пациента (если ошиблись при записи)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="analysis">
+            <h2>Анализ и выводы</h2>
+
+            <div class="analysis-section">
+                <h3>📊 Статистика CJM</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">10</span>
+                        <span class="stat-label">Этапов пути клиента</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">15+</span>
+                        <span class="stat-label">Болевых точек</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">20+</span>
+                        <span class="stat-label">Идей улучшения UX</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">4</span>
+                        <span class="stat-label">Критических этапа</span>
+                    </div>
+                </div>
+            </div>
+
+            <h3>🎯 Ключевые болевые точки</h3>
+            <div class="recommendations">
+                <div class="recommendation-item">
+                    <span class="priority-badge priority-high">Критично</span>
+                    <strong>Этап 3 — Заполнение профиля:</strong> Нервозность пользователя из-за большого количества полей и непонятного процесса привязки родственников. Риск: отказ от завершения регистрации.
+                </div>
+                <div class="recommendation-item">
+                    <span class="priority-badge priority-high">Критично</span>
+                    <strong>Этап 5 — Выбор врача:</strong> Отсутствие фильтрации и проверки отзывов снижает доверие к приложению. Риск: пользователь уходит искать врача другими способами.
+                </div>
+                <div class="recommendation-item">
+                    <span class="priority-badge priority-medium">Важно</span>
+                    <strong>Этап 10 — Управление записью:</strong> Сложность переноса/отмены записи вызывает раздражение. Риск: негативный отзыв в магазине приложений.
+                </div>
+                <div class="recommendation-item">
+                    <span class="priority-badge priority-medium">Важно</span>
+                    <strong>Этап 1 — Поиск клиники:</strong> Сложность сравнения клиник на этапе до скачивания приложения. Риск: пользователь не доходит до установки.
+                </div>
+            </div>
+
+            <h3>💡 Приоритизированные рекомендации</h3>
+            <div class="recommendations">
+                <div class="recommendation-item">
+                    <span class="priority-badge priority-high">Приоритет №1</span>
+                    <strong>Упростить процесс заполнения профиля и привязки родственников</strong>
+                    <p style="margin-top: 10px;">Реализовать прогресс-бар, подсказки у полей, интуитивный интерфейс добавления членов семьи. Это снизит нервозность (этап 3) и повысит конверсию регистрации.</p>
+                </div>
+                <div class="recommendation-item">
+                    <span class="priority-badge priority-high">Приоритет №2</span>
+                    <strong>Внедрить интеграцию с ПроДокторов для доверия к отзывам</strong>
+                    <p style="margin-top: 10px;">Показывать только проверенные отзывы пациентов, подтвердивших визит. Добавить фильтры по специальности, стажу, рейтингу. Это повысит уверенность пользователя при выборе врача (этап 5).</p>
+                </div>
+                <div class="recommendation-item">
+                    <span class="priority-badge priority-medium">Приоритет №3</span>
+                    <strong>Добавить гибкое управление записью</strong>
+                    <p style="margin-top: 10px;">Реализовать кнопку «Перенести» с автоматическим подбором слотов, возможность смены пациента в записи. Это снизит раздражение и повысит лояльность (этап 10).</p>
+                </div>
+                <div class="recommendation-item">
+                    <span class="priority-badge priority-medium">Приоритет №4</span>
+                    <strong>Улучшить UX через подсказки и визуальную обратную связь</strong>
+                    <p style="margin-top: 10px;">Добавить чек-листы, подсказки по формату ввода, экран успеха с номером записи. Это повысит уверенность пользователя на всех этапах.</p>
+                </div>
+            </div>
+
+            <h3> Эмоциональная карта пути</h3>
+            <div class="intro-box">
+                <p><strong>Негативные эмоции (требуют внимания):</strong> Этапы 1, 3, 5, 6, 7, 10</p>
+                <p><strong>Нейтральные эмоции:</strong> Этапы 2, 4</p>
+                <p><strong>Позитивные эмоции (удерживать):</strong> Этапы 8, 9</p>
+                <p style="margin-top: 20px;"><strong>Вывод:</strong> Наибольшее количество негативных эмоций集中在 начале пути (поиск, регистрация, выбор). Это критические точки, где пользователь может отказаться от использования приложения. Улучшение UX на этих этапах даст максимальный эффект для конверсии и удержания.</p>
+            </div>
+        </section>
+
+        <div style="text-align: center; margin-top: 60px;">
+            <a href="https://svetlayadonna.github.io/my-pet-projects/" class="back-button">← Вернуться к портфолио</a>
+        </div>
+    </div>
+</body>
+</html>
