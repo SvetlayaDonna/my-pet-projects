@@ -1,1 +1,424 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Архитектура видеохостинга (VideoHost) | Светлана Стащук</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .back-link:hover { text-decoration: underline; }
+        h1 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle {
+            font-size: 1.2em;
+            color: #667eea;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+        .badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        .badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 25px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+        h2 {
+            font-size: 1.8em;
+            margin: 40px 0 20px;
+            color: #333;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        h3 {
+            font-size: 1.4em;
+            margin: 25px 0 15px;
+            color: #444;
+        }
+        h4 {
+            font-size: 1.1em;
+            margin: 20px 0 10px;
+            color: #555;
+        }
+        p { line-height: 1.7; margin-bottom: 15px; color: #555; }
+        ul, ol { margin: 15px 0; padding-left: 25px; color: #555; }
+        li { margin-bottom: 8px; line-height: 1.6; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #f8f9fa;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 14px 18px;
+            text-align: left;
+            font-weight: 600;
+        }
+        td {
+            padding: 12px 18px;
+            border-bottom: 1px solid #e9ecef;
+            color: #555;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #f1f3f5; }
+        .diagram {
+            width: 100%;
+            max-width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin: 20px 0;
+            background: #f8f9fa;
+            padding: 20px;
+        }
+        .diagram img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .note {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            color: #444;
+        }
+        .note strong { color: #667eea; }
+        .architecture-diagram {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+            overflow-x: auto;
+            font-size: 0.95em;
+            line-height: 1.6;
+            color: #333;
+        }
+        .toc {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px 30px;
+            margin: 20px 0 30px;
+        }
+        .toc ul { list-style: none; padding-left: 0; }
+        .toc li { margin-bottom: 10px; }
+        .toc a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.05em;
+        }
+        .toc a:hover { text-decoration: underline; }
+        .toc .sub { padding-left: 20px; }
+        .author {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #eee;
+            color: #666;
+        }
+        .author a { color: #667eea; text-decoration: none; font-weight: 600; }
+        @media (max-width: 768px) {
+            .container { padding: 30px 20px; }
+            h1 { font-size: 2em; }
+            h2 { font-size: 1.5em; }
+            table { font-size: 0.9em; }
+            th, td { padding: 10px 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../index.html" class="back-link">← Вернуться в портфолио</a>
+        
+        <h1> Архитектура видеохостинга (VideoHost)</h1>
+        <p class="subtitle">Проект по проектированию архитектуры видеохостинга в рамках курса Fullstack Analyst</p>
+        
+        <div class="badges">
+            <span class="badge">✅ Completed</span>
+            <span class="badge">📘 Fullstack Analyst</span>
+            <span class="badge">🏗️ Microservices</span>
+            <span class="badge">️ PlantUML</span>
+        </div>
 
+        <div class="toc">
+            <h4 style="margin-top:0; color:#333;">📑 Оглавление</h4>
+            <ul>
+                <li><a href="#description">📋 Описание задачи</a></li>
+                <li><a href="#actors">👥 Акторы системы</a></li>
+                <li><a href="#stories">📝 User Stories</a></li>
+                <li><a href="#architecture">️ Архитектурные решения</a></li>
+                <li><a href="#diagrams">📊 Диаграммы</a>
+                    <ul class="sub">
+                        <li><a href="#bpmn">1. BPMN-диаграмма</a></li>
+                        <li><a href="#component">2. Диаграмма компонентов</a></li>
+                        <li><a href="#deployment">3. Диаграмма развёртывания</a></li>
+                        <li><a href="#sequence">4. Диаграмма взаимодействия</a></li>
+                    </ul>
+                </li>
+                <li><a href="#stack">🛠️ Технологический стек</a></li>
+                <li><a href="#requirements">📈 Ключевые требования</a></li>
+                <li><a href="#future">🚀 Дальнейшее развитие</a></li>
+            </ul>
+        </div>
+
+        <h2 id="description">📋 Описание задачи</h2>
+        <p>Разработать масштабируемую архитектуру видеохостинга с поддержкой:</p>
+        <table>
+            <tr><th>Возможность</th><th>Описание</th></tr>
+            <tr><td> <strong>Загрузка</strong></td><td>Поддержка видеофайлов до <strong>50 ГБ</strong> с дозагрузкой при обрыве</td></tr>
+            <tr><td>🎞️ <strong>Транскодирование</strong></td><td>Автоматическая генерация битрейтов <strong>360p → 2160p</strong> через FFmpeg</td></tr>
+            <tr><td>🌐 <strong>Стриминг</strong></td><td>Доставка контента через <strong>CDN</strong> с географическим распределением</td></tr>
+            <tr><td> <strong>Асинхронность</strong></td><td>Обработка через <strong>очереди сообщений</strong> (Kafka)</td></tr>
+            <tr><td>💾 <strong>Хранение</strong></td><td>Отказоустойчивое хранилище с репликацией оригиналов</td></tr>
+            <tr><td>▶️ <strong>Видеоплеер</strong></td><td>Управление воспроизведением, встраивание по ссылке</td></tr>
+        </table>
+
+        <h2 id="actors">👥 Акторы системы</h2>
+        <h3> Владелец видео</h3>
+        <table>
+            <tr><th>Действие</th><th>Описание</th></tr>
+            <tr><td>📤 Загрузка</td><td>Загружает видео в систему (с возможностью дозагрузки)</td></tr>
+            <tr><td>✏️ Управление</td><td>Редактирование названия, описания, удаление роликов</td></tr>
+            <tr><td>📊 Статистика</td><td>Просмотр просмотров и лайков</td></tr>
+            <tr><td>🔐 Авторизация</td><td>Управление только своими видео</td></tr>
+        </table>
+
+        <h3>🍿 Зритель</h3>
+        <table>
+            <tr><th>Действие</th><th>Описание</th></tr>
+            <tr><td>▶️ Просмотр</td><td>Смотрит видео <strong>без регистрации</strong> в обычном и ускоренном режимах</td></tr>
+            <tr><td>❤️ Взаимодействие</td><td>Лайки и комментарии <em>(требуется регистрация)</em></td></tr>
+            <tr><td>🔗 Шеринг</td><td>Делится видео в социальных сетях, встраивает по ссылке</td></tr>
+            <tr><td> Поиск</td><td>Ищет видео по названию и описанию</td></tr>
+        </table>
+
+        <h2 id="stories">📝 User Stories</h2>
+        <h3>🎥 Владелец видео</h3>
+        <table>
+            <tr><th>#</th><th>User Story</th></tr>
+            <tr><td>1</td><td>Как владелец видео, я хочу <strong>зарегистрировать аккаунт</strong>, чтобы загружать ролики и управлять ими</td></tr>
+            <tr><td>2</td><td>Как владелец видео, я хочу <strong>войти в личный кабинет</strong>, чтобы увидеть свои видео и доступные действия</td></tr>
+            <tr><td>3</td><td>Как владелец видео, я хочу <strong>выйти из аккаунта</strong>, чтобы никто другой не получил доступ к моим видео</td></tr>
+            <tr><td>4</td><td>Как владелец видео, я хочу <strong>выбрать видео и заполнить название и описание</strong>, чтобы опубликовать его для зрителей</td></tr>
+            <tr><td>5</td><td>Как владелец видео, я хочу <strong>удалить своё видео</strong>, чтобы убрать его из доступа</td></tr>
+            <tr><td>6</td><td>Как владелец видео, я хочу <strong>изменять название и описание</strong> своего ролика, чтобы исправить или дополнить информацию</td></tr>
+            <tr><td>7</td><td>Как владелец видео, я хочу <strong>видеть просмотры и лайки</strong> каждого своего видео, чтобы оценивать интерес аудитории</td></tr>
+        </table>
+
+        <h3>🍿 Зритель</h3>
+        <table>
+            <tr><th>#</th><th>User Story</th></tr>
+            <tr><td>1</td><td>Как зритель, я хочу <strong>искать видео</strong> по названию и описанию, чтобы находить интересующий контент</td></tr>
+            <tr><td>2</td><td>Как зритель, я хочу <strong>смотреть видео без регистрации</strong> и управлять воспроизведением, чтобы смотреть его удобным способом</td></tr>
+            <tr><td>3</td><td>Как зритель, я хочу <strong>зарегистрироваться</strong>, чтобы оставлять лайки и комментарии</td></tr>
+            <tr><td>4</td><td>Как зритель, я хочу <strong>войти/выйти</strong> на странице просмотра, чтобы управлять своим аккаунтом</td></tr>
+            <tr><td>5</td><td>Как зритель, я хочу <strong>поставить или убрать лайк</strong>, чтобы выразить или изменить свою оценку видео</td></tr>
+            <tr><td>6</td><td>Как зритель, я хочу <strong>написать комментарий</strong>, чтобы обсудить видео</td></tr>
+            <tr><td>7</td><td>Как зритель, я хочу <strong>удалить комментарий</strong>, чтобы отозвать своё сообщение</td></tr>
+        </table>
+
+        <h2 id="architecture">🏗️ Архитектурные решения</h2>
+        <h3>⚡ Асинхронная обработка видео</h3>
+        <p>Использование очереди сообщений (<strong>Kafka</strong>) для асинхронной обработки транскодирования. Пользователь не ждёт завершения обработки — система уведомляет о готовности.</p>
+        <div class="architecture-diagram">─────────────┐     ┌──────────────┐     ┌─────────────────┐
+│  Загрузка   │ ──▶ │    Kafka     │ ──▶ │  Transcoder     │
+│   видео     │     │   (очередь)  │     │  (FFmpeg, GPU)  │
+└─────────────┘     └──────────────┘     ─────────────────┘
+                                                │
+                                                ▼
+                                         ┌─────────────┐
+                                         │ Notification│
+                                         │   Service   │
+                                         ─────────────┘</div>
+        <div class="note"><strong>Почему очередь?</strong> Загрузка видео неравномерна — пользователь может закинуть сразу несколько роликов. Свободные обработчики забирают сообщения из очереди по мере освобождения.</div>
+
+        <h3>🎞️ Транскодирование и битрейты</h3>
+        <p>Автоматическая генерация битрейтов с помощью <strong>FFmpeg</strong>. Принцип адаптивного стриминга: сначала отдаём низкие битрейты (быстрый старт), по мере готовности добавляем высокие.</p>
+        <table>
+            <tr><th>Битрейт</th><th>Разрешение</th><th>Применение</th></tr>
+            <tr><td>360p</td><td>640×360</td><td>Мобильные устройства, быстрый старт</td></tr>
+            <tr><td>480p</td><td>854×480</td><td>Планшеты</td></tr>
+            <tr><td>720p</td><td>1280×720</td><td>HD-мониторы</td></tr>
+            <tr><td>1080p</td><td>1920×1080</td><td>Full HD</td></tr>
+            <tr><td>1440p</td><td>2560×1440</td><td>2K-дисплеи</td></tr>
+            <tr><td>2160p</td><td>3840×2160</td><td>4K-телевизоры</td></tr>
+        </table>
+        <div class="note">💡 Из исходного видео высотой 1500p можно нарезать битрейты 360p–1440p. Битрейт 2160p для 4K получить из такого оригинала не получится.</div>
+
+        <h3>💾 Хранение видео</h3>
+        <table>
+            <tr><th>Компонент</th><th>Технология</th><th>Назначение</th></tr>
+            <tr><td>🪣 <strong>S3</strong></td><td>AWS S3 / MinIO</td><td>Хранение оригиналов и битрейтов</td></tr>
+            <tr><td>🔁 <strong>Репликация</strong></td><td>Multi-AZ</td><td>Дублирование оригиналов для отказоустойчивости</td></tr>
+            <tr><td>🌍 <strong>CDN</strong></td><td>CloudFront / CloudFlare</td><td>Географическое распределение контента</td></tr>
+        </table>
+        <p><strong>Стратегия хранения:</strong></p>
+        <ul>
+            <li>Оригиналы дублируются минимум на одном сервере (отказоустойчивость)</li>
+            <li>Битрейты хранятся в одном экземпляре (экономия места, при необходимости перегенерируются)</li>
+            <li>Система анализирует размер хранимой информации и в фоне перебрасывает файлы между серверами</li>
+        </ul>
+
+        <h2 id="diagrams">📊 Диаграммы</h2>
+
+        <h3 id="bpmn">1. BPMN-диаграмма</h3>
+        <p><strong>Загрузка видео со стороны владельца</strong></p>
+        <div class="diagram">
+            <img src="bpmn.png" alt="BPMN Diagram">
+        </div>
+        <div class="note"><strong>Описание:</strong> Процесс загрузки видео: выбор файла, заполнение метаданных, проверка авторизации, загрузка в S3, постановка задачи на транскодирование, уведомление о готовности.</div>
+
+        <h3 id="component">2. Диаграмма компонентов</h3>
+        <div class="diagram">
+            <img src="component-diagram.png" alt="Component Diagram">
+        </div>
+        <div class="note">
+            <strong>Описание:</strong> Архитектура системы с микросервисами:
+            <ul style="margin-top:10px;">
+                <li><strong>API Gateway</strong> — точка входа, маршрутизация</li>
+                <li><strong>Auth Service</strong> — аутентификация и авторизация (JWT)</li>
+                <li><strong>Video Service</strong> — управление метаданными видео</li>
+                <li><strong>Upload Service</strong> — обработка загрузки файлов, presigned URL</li>
+                <li><strong>Notification Service</strong> — уведомления пользователей</li>
+                <li><strong>Message Broker (Kafka)</strong> — очередь задач на транскодирование</li>
+                <li><strong>Transcoding Service</strong> — конвертация видео (FFmpeg, GPU)</li>
+                <li><strong>Database (PostgreSQL)</strong> — хранение метаданных</li>
+                <li><strong>S3 Storage</strong> — объектное хранилище</li>
+                <li><strong>CDN</strong> — доставка контента</li>
+            </ul>
+        </div>
+
+        <h3 id="deployment">3. Диаграмма развёртывания</h3>
+        <div class="diagram">
+            <img src="deployment-diagram.png" alt="Deployment Diagram">
+        </div>
+        <div class="note">
+            <strong>Описание:</strong> Физическая инфраструктура системы:
+            <ul style="margin-top:10px;">
+                <li><strong>Клиент</strong> — Веб-приложение (браузер) для владельца видео и зрителя</li>
+                <li><strong>CDN</strong> — доставка контента (https:443)</li>
+                <li><strong>k8s (stateless)</strong> — кластер Kubernetes с подами: API Gateway (:8080), Auth Service, Video Service, Сервис загрузки, Сервис уведомлений</li>
+                <li><strong>Kafka (self-hosted)</strong> — брокер сообщений</li>
+                <li><strong>Transcoding pool (self-hosted, GPU)</strong> — сервис транскодирования</li>
+                <li><strong>БД (self-hosted)</strong> — PostgreSQL</li>
+                <li><strong>S3 (managed)</strong> — объектное хранилище</li>
+            </ul>
+        </div>
+
+        <h3 id="sequence">4. Диаграмма взаимодействия (Sequence Diagram)</h3>
+        <p><strong>Сценарий: Загрузка видео на видеохостинг</strong></p>
+        <div class="diagram">
+            <img src="sequence-diagram.png" alt="Sequence Diagram">
+        </div>
+
+        <h4>🔄 Процесс загрузки</h4>
+        <table>
+            <tr><th>Шаг</th><th>Этап</th><th>Описание</th></tr>
+            <tr><td>1️⃣</td><td><strong>Авторизация и создание записи</strong></td><td>Проверка токена, создание записи о видео в БД (статус: «ожидает»)</td></tr>
+            <tr><td>2️</td><td><strong>Загрузка файла</strong></td><td>Получение presigned URL, загрузка в S3 чанками (до 50 ГБ)</td></tr>
+            <tr><td>3️⃣</td><td><strong>Асинхронная обработка</strong></td><td>Задача на транскодирование через Kafka, генерация битрейтов 360p–2160p</td></tr>
+            <tr><td>4️</td><td><strong>Обновление статуса</strong></td><td>Изменение статуса видео на «готово», уведомление владельца</td></tr>
+        </table>
+
+        <h4>🧩 Компоненты системы</h4>
+        <table>
+            <tr><th>Компонент</th><th>Роль</th></tr>
+            <tr><td><strong>Владелец видео</strong></td><td>Инициатор загрузки</td></tr>
+            <tr><td><strong>Веб-приложение</strong></td><td>Клиентский интерфейс</td></tr>
+            <tr><td><strong>API Gateway</strong></td><td>Маршрутизация запросов</td></tr>
+            <tr><td><strong>Auth Service</strong></td><td>Проверка JWT-токена</td></tr>
+            <tr><td><strong>Video Service</strong></td><td>Управление метаданными видео</td></tr>
+            <tr><td><strong>Сервис загрузки</strong></td><td>Presigned URL, приём файла</td></tr>
+            <tr><td><strong>Сервис уведомлений</strong></td><td>Оповещение о готовности</td></tr>
+            <tr><td><strong>Брокер сообщений (Kafka)</strong></td><td>Очередь задач на транскодирование</td></tr>
+            <tr><td><strong>Сервис транскодирования</strong></td><td>FFmpeg + GPU, генерация битрейтов</td></tr>
+            <tr><td><strong>БД (PostgreSQL)</strong></td><td>Хранение метаданных</td></tr>
+            <tr><td><strong>S3</strong></td><td>Объектное хранилище</td></tr>
+        </table>
+
+        <div class="note">ℹ️ <strong>Примечание:</strong> На диаграмме взаимодействия сервисы сгруппированы логически: <code>k8s (API)</code>, <code>k8s (Auth)</code>, <code>k8s (Services)</code>. Физически все они развёрнуты в одном кластере Kubernetes, что отражено на диаграмме развёртывания.</div>
+
+        <h2 id="stack">🛠️ Технологический стек</h2>
+        <table>
+            <tr><th>Категория</th><th>Технология</th><th>Обоснование</th></tr>
+            <tr><td>🚪 <strong>API Gateway</strong></td><td>Kong / NGINX</td><td>Маршрутизация, rate limiting</td></tr>
+            <tr><td>🔐 <strong>Auth Service</strong></td><td>Node.js + JWT</td><td>Быстрая аутентификация</td></tr>
+            <tr><td>🎬 <strong>Video Service</strong></td><td>Go</td><td>Высокая производительность</td></tr>
+            <tr><td> <strong>Upload Service</strong></td><td>Node.js</td><td>Работа с потоками, чанковая загрузка</td></tr>
+            <tr><td>🎞️ <strong>Transcoding</strong></td><td>FFmpeg + Python</td><td>Стандарт индустрии, GPU-ускорение</td></tr>
+            <tr><td>📨 <strong>Message Broker</strong></td><td>Kafka</td><td>Надёжные очереди, self-hosted</td></tr>
+            <tr><td>🗄️ <strong>Database</strong></td><td>PostgreSQL</td><td>ACID, надёжность, self-hosted</td></tr>
+            <tr><td>🪣 <strong>Storage</strong></td><td>S3 (managed)</td><td>Объектное хранилище</td></tr>
+            <tr><td>🌍 <strong>CDN</strong></td><td>CloudFront / CloudFlare</td><td>Глобальная доставка контента</td></tr>
+            <tr><td>️ <strong>Orchestration</strong></td><td>Kubernetes</td><td>Масштабирование, stateless-поды</td></tr>
+        </table>
+
+        <h2 id="requirements">📈 Ключевые требования</h2>
+        <table>
+            <tr><th>Требование</th><th>Описание</th><th>Приоритет</th></tr>
+            <tr><td>✅ <strong>Доступность</strong></td><td>Система должна быть доступна 24/7</td><td>🔴 Высокий</td></tr>
+            <tr><td> <strong>Бесперебойность</strong></td><td>Отказоустойчивость при выходе серверов из строя</td><td> Высокий</td></tr>
+            <tr><td>⚡ <strong>Производительность</strong></td><td>Быстрая загрузка и воспроизведение видео</td><td>🟡 Средний</td></tr>
+            <tr><td>🔐 <strong>Авторизуемость</strong></td><td>Управление только своими видео</td><td>🔴 Высокий</td></tr>
+            <tr><td>📊 <strong>Масштабируемость</strong></td><td>Горизонтальное масштабирование при нагрузке</td><td>🟢 Низкий</td></tr>
+        </table>
+
+        <h2 id="future">🚀 Дальнейшее развитие</h2>
+        <ul>
+            <li>☐ Рекомендательная система на основе ML</li>
+            <li>☐ Live-стриминг</li>
+            <li>☐ Субтитры и переводы</li>
+            <li> Монетизация контента</li>
+            <li>☐ Социальные функции (подписки, ленты)</li>
+            <li> Правовые ограничения (возрастные, авторские права)</li>
+        </ul>
+
+        <div class="author">
+            <p><strong>Автор:</strong> Светлана Стащук &nbsp;|&nbsp; <strong>Курс:</strong> Fullstack Analyst &nbsp;|&nbsp; <strong>Проект:</strong> Архитектура видеохостинга</p>
+            <p><a href="https://github.com/SvetlayaDonna" target="_blank">GitHub</a></p>
+        </div>
+    </div>
+</body>
+</html>
